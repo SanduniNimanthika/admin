@@ -1,0 +1,69 @@
+{
+  "project_info": {
+    "project_number": "858992348734",
+    "firebase_url": "https://medicare-7e8cd.firebaseio.com",
+    "project_id": "medicare-7e8cd",
+    "storage_bucket": "medicare-7e8cd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858992348734:android:c61a5abd782152faec4b6f",
+        "android_client_info": {
+          "package_name": "sanduniniman.admin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858992348734-t6tfk7oufq16s57in6gjkceuipkkprv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZZX1wh0RmRYwYRgjmMTPd450M4AjxD-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858992348734-t6tfk7oufq16s57in6gjkceuipkkprv9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:858992348734:android:d1791e2bf52e0aaaec4b6f",
+        "android_client_info": {
+          "package_name": "sanduniniman.medicare"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "858992348734-t6tfk7oufq16s57in6gjkceuipkkprv9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCZZX1wh0RmRYwYRgjmMTPd450M4AjxD-Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "858992348734-t6tfk7oufq16s57in6gjkceuipkkprv9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
