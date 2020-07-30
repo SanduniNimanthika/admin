@@ -1,9 +1,13 @@
 class Staff{
   String staffkey;
-  String fullname;
+ String role;
   String email;
-  String telenumber;
+  String fullname;
   String address;
+  String telenumber;
 
-  Staff({this.staffkey,this.fullname,this.email,this.telenumber,this.address,});
+
+
+
+  Staff({this.staffkey,this.role,this.email,this.fullname,this.address,this.telenumber});
 }

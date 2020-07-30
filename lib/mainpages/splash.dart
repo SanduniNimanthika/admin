@@ -3,7 +3,7 @@ import 'package:admin/commanpages/configue.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:admin/services/usermanagment.dart';
+import 'package:admin/mainpages/landing.dart';
 class Splash extends StatefulWidget {
   @override
   _SplashState createState() => _SplashState();
@@ -20,8 +20,7 @@ class _SplashState extends State<Splash> {
       return Timer(duration,route);
   }
       route(){
-    Navigator.pushReplacement(context,
-    MaterialPageRoute(builder: (context)=>UserManagment().handleAuth(),));
+        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>LandingPage()));
       }
   @override
   Widget build(BuildContext context) {

@@ -1,5 +1,4 @@
 import 'package:admin/loginsignup/login.dart';
-import 'package:admin/loginsignup/signup.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
 class Homepage extends StatefulWidget {
@@ -55,67 +54,32 @@ class Button extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 12*SizeConfig.heightMultiplier),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          Padding(
-            padding:  EdgeInsets.only(left:6*SizeConfig.heightMultiplier,right: 6*SizeConfig.heightMultiplier ),
-            child: Material(
-              borderRadius: BorderRadius.circular(5*SizeConfig.heightMultiplier),
-              elevation: 4.0,
-              child: InkWell(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Signin()));
-                },
-                child: Container(
-                  height: 40,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                      colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],),
-                    borderRadius: BorderRadius.circular(5*SizeConfig.heightMultiplier),
-                  ),
-                  child: Center(
-                    child: Text("Login",
-                        style:Theme.of(context).textTheme.subhead),
-                  ),
-                ),
+      padding: EdgeInsets.only(top: 13*SizeConfig.heightMultiplier),
+      child: Padding(
+        padding:  EdgeInsets.only(left:6*SizeConfig.heightMultiplier,right: 6*SizeConfig.heightMultiplier ),
+        child: Material(
+          borderRadius: BorderRadius.circular(20.0),
+          elevation: 4.0,
+          child: InkWell(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Signin()));
+            },
+            child: Container(
+              height: 50,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              child: Center(
+                child: Text("Login",
+                    style:Theme.of(context).textTheme.subhead),
               ),
             ),
           ),
-          Padding(
-            padding:  EdgeInsets.only(top:5*SizeConfig.heightMultiplier,bottom: 7*SizeConfig.heightMultiplier,
-                left: 6*SizeConfig.heightMultiplier,right: 6*SizeConfig.heightMultiplier),
-            child: Material(
-              borderRadius: BorderRadius.circular(5*SizeConfig.heightMultiplier),
-              elevation: 7.0,
-              child: InkWell(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Signup()));
-                },
-                child: Container(
-                  height:40,
-
-                  decoration: BoxDecoration(
-                      color: Color(0xFFE3F2FD),
-                      borderRadius: BorderRadius.circular(5*SizeConfig.heightMultiplier),
-                      border: Border.all(
-                          color:Color(0xFF185a9d),
-                          style: BorderStyle.solid,
-                          width: 2.0
-                      )
-                  ),
-                  child: Center(
-                    child: Text("Create an account",
-                        style:Theme.of(context).textTheme.subhead.copyWith(color:Color(0xFF185a9d) )),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

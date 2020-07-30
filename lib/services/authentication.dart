@@ -2,9 +2,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/mainpages/home.dart';
 import 'package:admin/module/staff.dart';
 import 'package:admin/database/staffdatabase.dart';
+
+
 
 
 
@@ -27,15 +28,12 @@ class AuthService{
   }
 
   // sign up
-  Future   registerWithEmailAndPassword(String email,String password,String fullname,String telenumber,String address ,String confirmpassword,BuildContext context) async {
+  Future   registerWithEmailAndPassword(String email,String password,String role,BuildContext context) async {
     try {
       AuthResult result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
       FirebaseUser user = result.user;
-
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>Homepage()));
-
-      await DatabaseService(uid: user.uid).updateStaffData(fullname, email,  telenumber,address);
+      await DatabaseService(uid: user.uid).updateStaffData(email, role, 'staffname', 'address', '0000000000');
       return _staffFromFirebaseUser(user);
     } catch (e) {
       return null;
@@ -50,6 +48,9 @@ class AuthService{
 
       AuthResult result=await _auth.signInWithEmailAndPassword(email:email, password: password);
       FirebaseUser user=result.user;
+
+
+
       return _staffFromFirebaseUser(user);
     }catch(e){
 
@@ -59,6 +60,7 @@ class AuthService{
   //sign out
   Future signOut(BuildContext context) async{
     try{
+
       return await _auth.signOut();
 
     }catch(e){

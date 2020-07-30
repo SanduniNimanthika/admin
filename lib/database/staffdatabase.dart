@@ -11,20 +11,36 @@ class DatabaseService{
   //database collection
   final CollectionReference staffCollection=Firestore.instance.collection('Staff');
 
-  Future updateStaffData( String fullname,
-      String email,
-      String telenumber,
-      String address,)async{
+  Future updateStaffData(
+      String email, String role,String fullname,String address,String telenumber )async{
     return await staffCollection.document(uid).setData({
       'uid':uid,
-      'fullname':fullname,
       'email':email,
-      'telenumber':telenumber,
+      'role':role,
+      'fullname':fullname,
       'address':address,
+      'telenumber':telenumber,
+
+
     });
 
-  }
 
+  }
+Future profileupdate(
+    String email,String role,
+    String fullname,String address,String telenumber
+    )async{
+    return staffCollection.document(uid).setData({
+      'uid':uid,
+      'email':email,
+      'role':role,
+      'fullname':fullname,
+      'address':address,
+      'telenumber':telenumber,
+
+
+    });
+}
 
 
 
@@ -33,10 +49,14 @@ class DatabaseService{
   Staff _staffProfileDataFromSnapshot(DocumentSnapshot snapshot){
     return Staff(
       staffkey: snapshot.documentID,
-      fullname: snapshot.data['fullname'],
+      role: snapshot.data['role'],
       email: snapshot.data['email'],
-      telenumber: snapshot.data['telenumber'],
+      fullname: snapshot.data['fullname'],
       address: snapshot.data['address'],
+      telenumber: snapshot.data['telenumber']
+
+
+
 
     );
   }
