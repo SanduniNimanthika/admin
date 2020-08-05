@@ -30,7 +30,7 @@ Future profileupdate(
     String email,String role,
     String fullname,String address,String telenumber
     )async{
-    return staffCollection.document(uid).setData({
+    return staffCollection.document(uid).updateData({
       'uid':uid,
       'email':email,
       'role':role,

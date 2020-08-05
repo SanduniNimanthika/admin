@@ -9,22 +9,26 @@ import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/mainpages/home.dart';
 import 'package:admin/loginsignup/signup.dart';
+import 'package:admin/commanpages/loading.dart';
+
 
 
 import 'package:admin/mainpages/vieworder.dart';
-import 'package:admin/mainpages/productcollection.dart';
+import 'package:admin/product/productcollection.dart';
 
 class AdminPanel extends StatefulWidget {
   @override
   _AdminPanelState createState() => _AdminPanelState();
 }
+bool loading = false;
 
 class _AdminPanelState extends State<AdminPanel> {
 
   final DatabaseService databaseService = DatabaseService();
   final AuthService _auth = AuthService();
 
-  GlobalKey<ScaffoldState> _key = GlobalKey();
+
+
   @override
   Widget build(BuildContext context) {
     final staff = Provider.of<Staff>(context, listen: false);
@@ -33,28 +37,25 @@ class _AdminPanelState extends State<AdminPanel> {
           stream: DatabaseService(uid: staff.staffkey).profileData,
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Homepage();
+              return Container(
+                  alignment: Alignment.center,
+                  padding: EdgeInsets.only(top: 10.0),
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation(Colors.blue),
+                  ));
             }
             final profile = snapshot.data;
-            return Scaffold(
-                key: _key,
-                drawer: Drawer(
-                  // linear background
-                  child: Container(
-                    color: Color(0xFFE3F2FD),
-                    child: ListView(
-                      children: <Widget>[
-                        UserAccountsDrawerHeader(
-                          accountEmail: Text(profile.email),
-                          currentAccountPicture: GestureDetector(
-                            child: CircleAvatar(
-                                backgroundColor: Colors.white70,
-                                child: Icon(
-                                  Icons.person,
-                                  color: Colors.blueGrey,
-                                  size: 50,
-                                )),
-                          ),
+            return loading
+                ? Loading()
+                :Scaffold(
+                body: SingleChildScrollView(
+                  child: Stack(
+                    children: <Widget>[
+                      ClipPath(
+                        clipper: ClippingPath(),
+                        child: Container(
+                          height:(SizeConfig.isMobilePortrait?(MediaQuery.of(context).size.height/5*2):(MediaQuery.of(context).size.height/4*3)),
+                          width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                             gradient: LinearGradient(
                               begin: Alignment.topLeft,
@@ -63,222 +64,215 @@ class _AdminPanelState extends State<AdminPanel> {
                                 const Color(0xFF185a9d),
                                 const Color(0xFF43cea2)
                               ],
-                              tileMode: TileMode.repeated,
                             ),
                           ),
-                        ), // homepage
-
-                        //my account
-
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => Myaccount()),
-                            );
-                          },
-                          child: ListTile(
-                            title: Text("My Account",
-                                style: Theme.of(context).textTheme.display1),
-                            leading: Icon(Icons.person,
-                                color: Colors.blueGrey, size: 25),
-                          ),
                         ),
-
-                        Divider(
-                          color: Colors.blueGrey,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 3 * SizeConfig.heightMultiplier,
+                            top: 8 * SizeConfig.heightMultiplier),
+                        child: Row(
+                          children: <Widget>[
+                            Text(
+                              "Hello,",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline
+                                  .copyWith(fontSize: 35.0),
+                            ),
+                            Text(
+                              profile.fullname,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headline
+                                  .copyWith(fontSize: 30.0),
+                            ),
+                          ],
                         ),
-                        InkWell(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => Signup()),
-                            );
-                          },
-                          child: ListTile(
-                            title: Text("Add staff",
-                                style: Theme.of(context).textTheme.display1),
-                            leading: Icon(Icons.add,
-                                color: Colors.blueGrey, size: 25),
-                          ),
+                      ),
+                      Padding(
+                        padding:  EdgeInsets.only(top:25*SizeConfig.heightMultiplier,left: 4*SizeConfig.heightMultiplier,
+                            right: 4*SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier),
+                        child: Column(
+                          children: <Widget>[
+
+                                                    //product
+
+                            InkWell(
+                              onTap: (){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => ProductCollection()));
+                              },
+                              child: dashbord(context,"Product","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
+                            ),
+
+
+                            Padding(
+                              padding:  EdgeInsets.only(top:4*SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier ),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(right:2*SizeConfig.heightMultiplier),
+
+                                                              //staff
+                                      child: InkWell(
+                                          onTap: (){
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => Signup()));
+                                          },
+                                          child: dashbord(context,"Staff","images/dashbord/committees.png",'255',MediaQuery.of(context).size.width,)
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left:2*SizeConfig.heightMultiplier),
+                                      child: InkWell(
+                                          onTap: (){},
+                                          child: dashbord(context,"Customers","images/dashbord/family1.png",'255',MediaQuery.of(context).size.width,)
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                                                    //order
+                            InkWell(
+                                onTap: (){},
+                                child: dashbord(context,"Order","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
+                            ),
+                            Padding(
+                              padding:  EdgeInsets.only(top:4*SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier ),
+                              child: Row(
+                                children: <Widget>[
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding:  EdgeInsets.only(right:2*SizeConfig.heightMultiplier),
+
+                                                            //my account
+                                      child: InkWell(
+                                          onTap: (){
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => Myaccount()),
+                                            );
+                                          },
+                                          child:Material(
+                                            shadowColor: Colors.teal,
+                                            color: Color(0xFFE3F2FD),
+                                            elevation: 10,
+                                            type: MaterialType.canvas,
+                                            borderRadius: BorderRadius.circular(27.0),
+                                            child: Container(
+                                              width: MediaQuery.of(context).size.width/2,
+                                              height: (SizeConfig.isMobilePortrait?(MediaQuery.of(context).size.height/7*2):(MediaQuery.of(context).size.height/2)),
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(10.0),
+                                                child: Column(
+                                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                  children: <Widget>[
+                                                    Expanded(
+                                                        flex: 3,
+                                                        child: Text("My Account",style: Theme.of(context).textTheme.display1.copyWith(fontSize: 23,color: Color(0xFF185a9d)))),
+                                                    Expanded(
+                                                        flex: 6,
+                                                        child: Image(image:AssetImage("images/dashbord/person-icon-blue-9.png"),)),
+
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          )
+
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 1,
+                                    child: Padding(
+                                      padding: EdgeInsets.only(left:2*SizeConfig.heightMultiplier),
+                                      child: InkWell(
+                                          onTap: ()async {
+                                            await _auth.signOut(context);
+                                            Navigator.pushReplacement(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (BuildContext context) =>
+                                                        Homepage()));
+
+                                          },
+                                          child: dashbord(context,"Security","images/dashbord/secu.png",'255',MediaQuery.of(context).size.width,)
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                            ),
+                          ],
                         ),
+                      )
 
-                        Divider(
-                          color: Colors.blueGrey,
-                        ),
+                    ],
 
-                        //setting
-
-                        InkWell(
-                          child: ListTile(
-                            title: Text("Settings",
-                                style: Theme.of(context).textTheme.display1),
-                            leading: Icon(Icons.settings,
-                                color: Colors.blueGrey, size: 25),
-                          ),
-                        ),
-
-                        Divider(color: Colors.blueGrey),
-
-                        //logout
-                        InkWell(
-                          onTap: () async {
-                            await _auth.signOut(context);
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (BuildContext context) =>
-                                        Homepage()));
-                          },
-                          child: ListTile(
-                            title: Text("Logout",
-                                style: Theme.of(context).textTheme.display1),
-                            leading: Icon(Icons.arrow_back,
-                                color: Colors.blueGrey, size: 25),
-                          ),
-                        ),
-                      ],
-                    ),
+                    //  body:AdminPanel()
                   ),
-                ),
-                appBar: _customAppBar(_key, context),
-                body: Stack(
-                  children: <Widget>[
-                    ClipPath(
-                      clipper: ClippingPath(),
-                      child: Container(
-                        height: MediaQuery.of(context).size.height / 5 * 2,
-                        width: MediaQuery.of(context).size.width,
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
-                            colors: [
-                              const Color(0xFF185a9d),
-                              const Color(0xFF43cea2)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          left: 3 * SizeConfig.heightMultiplier,
-                          top: 8 * SizeConfig.heightMultiplier),
-                      child: Row(
-                        children: <Widget>[
-                          Text(
-                            "Hello,",
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline
-                                .copyWith(fontSize: 35.0),
-                          ),
-                          Text(
-                            profile.fullname,
-                            style: Theme.of(context)
-                                .textTheme
-                                .headline
-                                .copyWith(fontSize: 30.0),
-                          ),
-                        ],
-                      ),
-                    ),
-                    /*  StaggeredGridView.count(crossAxisCount: 2,
-                  crossAxisSpacing: 15.0,
-                  mainAxisSpacing: 15.0,
-                  padding: EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
-                  children: <Widget>[
-                    MyITEM(Icons.ac_unit,'totol'),
-                    MyITEM(Icons.ac_unit,'totol'),
-                    MyITEM(Icons.ac_unit,'totol'),
-
-                  ],
-                  staggeredTiles: [
-                    StaggeredTile.extent(2, 130),
-                    StaggeredTile.extent(1, 150),
-                    StaggeredTile.extent(2, 130),
-
-
-
-                  ],),*/
-                  ],
-
-                  //  body:AdminPanel()
                 ));
           }),
     );
   }
 }
 
-Widget _customAppBar(GlobalKey<ScaffoldState> globalKey, BuildContext context) {
-  return PreferredSize(
-    preferredSize: Size.fromHeight(12 * SizeConfig.heightMultiplier),
-    child: Material(
-      elevation: 0.0,
-      child: Container(
-        alignment: Alignment.bottomCenter,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-          ),
-        ),
-        child: Padding(
-          padding: EdgeInsets.only(
-              left: 2.2 * SizeConfig.widthMultiplier,
-              right: 5 * SizeConfig.widthMultiplier),
-          child: Center(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                IconButton(
-                  icon: Icon(
-                    Icons.list,
-                    color: Colors.white,
-                    size: 5 * SizeConfig.heightMultiplier,
-                  ),
-                  onPressed: () {
-                    globalKey.currentState.openDrawer();
-                  },
-                ),
-                Material(
-                  borderRadius: BorderRadius.circular(20),
-                  elevation: 7.0,
-                  child: InkWell(
-                    onTap: () {
-                      // Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Storehome()));
-                    },
-                    child: Container(
-                      height: 40,
-                      width: 100,
-                      decoration: BoxDecoration(
-                          color: Color(0xFFE3F2FD),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                              color: Color(0xFF185a9d),
-                              style: BorderStyle.solid,
-                              width: 2.0)),
-                      child: Center(
-                        child: Text("Go to Store",
-                            style: Theme.of(context)
-                                .textTheme
-                                .subhead
-                                .copyWith(color: Color(0xFF185a9d))),
-                      ),
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
+
+Widget dashbord(BuildContext context,String name,String img,String count,double width){
+  return  Material(
+    shadowColor: Colors.teal,
+    color: Color(0xFFE3F2FD),
+    elevation: 10,
+    type: MaterialType.canvas,
+    borderRadius: BorderRadius.circular(27.0),
+    child: Container(
+      width: width,
+      height:(SizeConfig.isMobilePortrait?(MediaQuery.of(context).size.height/7*2):(MediaQuery.of(context).size.height/2)),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(
+                flex: 3,
+                child: Text(name,style: Theme.of(context).textTheme.display1.copyWith(fontSize: 23,color: Color(0xFF185a9d)))),
+            Expanded(
+                flex: 6,
+                child: Image(image:AssetImage(img),)),
+
+            Expanded(
+                flex:3,child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(count,style: Theme.of(context).textTheme.display1.copyWith(fontSize: 23,color: Color(0xFF185a9d))),
+                ))
+
+
+
+          ],
         ),
       ),
     ),
   );
 }
+
+
 
 class ClippingPath extends CustomClipper<Path> {
   @override

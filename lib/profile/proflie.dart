@@ -139,6 +139,7 @@ class _MyaccountState extends State<Myaccount> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       elevation: 7.0,
                                       child: InkWell(
+                                        borderRadius: BorderRadius.circular(20.0),
                                         onTap: () {
                                           UserManagment()
                                               .authorizedAccess(context);

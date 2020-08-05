@@ -1,15 +1,19 @@
 import 'package:admin/loginsignup/login.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
+import 'package:admin/commanpages/loading.dart';
 class Homepage extends StatefulWidget {
   @override
   _HomepageState createState() => _HomepageState();
 }
+bool loading = false;
 
 class _HomepageState extends State<Homepage> {
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return  loading
+        ? Loading()
+        :SafeArea(
       child: Scaffold(
         body:SingleChildScrollView(
           child: Column(

@@ -12,7 +12,7 @@ import 'package:admin/commanpages/loading.dart';
 import 'package:admin/mainpages/home.dart';
 
 import 'package:admin/mainpages/vieworder.dart' as firstpage;
-import 'package:admin/mainpages/productcollection.dart' as secondpage;
+import 'package:admin/product/productcollection.dart' as secondpage;
 class StaffPanel extends StatefulWidget {
   @override
   _StaffPanelState createState() => _StaffPanelState();

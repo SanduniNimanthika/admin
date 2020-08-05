@@ -1,9 +1,8 @@
-
+import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
 import 'package:admin/mainpages/home.dart';
-import 'package:admin/loginsignup/login.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:admin/services/authentication.dart';
 import 'package:flutter/rendering.dart';
@@ -19,7 +18,6 @@ String error = '';
 class _SignupState extends State<Signup> {
   final AuthService _auth = AuthService();
   bool loading = false;
-
 
   String fullname = '';
   String email = '';
@@ -54,7 +52,7 @@ class _SignupState extends State<Signup> {
                     Stack(
                       children: <Widget>[
                         Container(
-                          height: MediaQuery.of(context).size.height+30*SizeConfig.heightMultiplier,
+                          height: MediaQuery.of(context).size.height,
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
                               image: DecorationImage(
@@ -64,7 +62,7 @@ class _SignupState extends State<Signup> {
                         Opacity(
                           opacity: 0.8,
                           child: Container(
-                            height: MediaQuery.of(context).size.height+30*SizeConfig.heightMultiplier,
+                            height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
@@ -86,8 +84,7 @@ class _SignupState extends State<Signup> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => Homepage()));
+                              UserManagment().authorizedAccess(context);
                             },
                           ),
                         ),
@@ -96,29 +93,30 @@ class _SignupState extends State<Signup> {
                             key: _formKey,
                             child: Padding(
                               padding: EdgeInsets.only(
-                                top: 150,
+                                  top: 15 * SizeConfig.heightMultiplier,
                                   bottom: 5 * SizeConfig.heightMultiplier,
                                   left: 6 * SizeConfig.heightMultiplier,
                                   right: 6 * SizeConfig.heightMultiplier),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 children: <Widget>[
-                                  //name
-                     /*       Opacity(
+                                  //Email ADDRESS
+                                  Opacity(
                                     opacity: 0.8,
-                                    child: new Container(
+                                    child: Container(
                                       child: new Center(
                                           child: new TextFormField(
                                               decoration: new InputDecoration(
-                                                labelText: "Full Name",
+                                                labelText: "Email",
+                                                prefixIcon: Icon(Icons.email,
+                                                    color: Colors.blueGrey),
                                                 labelStyle: Theme.of(context)
                                                     .textTheme
                                                     .display1,
                                                 fillColor: Colors.white,
                                                 filled: true,
-                                                prefixIcon: Icon(Icons.person,
-                                                    color: Colors.blueGrey),
-                                                focusedBorder: OutlineInputBorder(
+                                                focusedBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       color: Color(0xFF185a9d),
                                                       style: BorderStyle.solid,
@@ -127,7 +125,8 @@ class _SignupState extends State<Signup> {
                                                       new BorderRadius.circular(
                                                           22.0),
                                                 ),
-                                                enabledBorder: OutlineInputBorder(
+                                                enabledBorder:
+                                                    OutlineInputBorder(
                                                   borderSide: BorderSide(
                                                       color: Color(0xFF185a9d),
                                                       style: BorderStyle.solid,
@@ -137,192 +136,20 @@ class _SignupState extends State<Signup> {
                                                           22.0),
                                                 ),
                                               ),
-                                              validator: (input) => input.isEmpty
-                                                  ? 'Please type your full name here'
+                                              validator: (input) => input
+                                                      .isEmpty
+                                                  ? 'Please type your email here'
                                                   : null,
                                               onChanged: (input) {
                                                 setState(() {
-                                                  fullname = input;
+                                                  email = input;
                                                 });
                                               },
-                                              keyboardType: TextInputType.text,
+                                              keyboardType:
+                                                  TextInputType.emailAddress,
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .display1)),
-                                    ),
-                                  ),*/
-
-
-
-                                  //Address
-                             /*     Padding(
-                                    padding: EdgeInsets.only(top: 18.0,
-                                    ),
-                                    child: Opacity(
-                                      opacity: 0.8,
-                                      child: Container(
-                                        child: new Center(
-                                            child: new TextFormField(
-                                                decoration: new InputDecoration(
-                                                  labelText: "Address",
-                                                  prefixIcon: Icon(Icons.home,
-                                                      color: Colors.blueGrey),
-                                                  labelStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .display1,
-                                                  fillColor: Colors.white,
-                                                  filled: true,
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                ),
-                                                validator: (input) => input
-                                                        .isEmpty
-                                                    ? 'Please type your address here'
-                                                    : null,
-                                                onChanged: (input) {
-                                                  setState(() {
-                                                    address = input;
-                                                  });
-                                                },
-                                                keyboardType: TextInputType.text,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .display1)),
-                                      ),
-                                    ),
-                                  ),*/
-
-                                  // TP NUMBER
-                               /*   Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 18.0,
-                                    ),
-                                    child: Opacity(
-                                      opacity: 0.8,
-                                      child: Container(
-                                        child: new Center(
-                                            child: new TextFormField(
-                                                decoration: new InputDecoration(
-                                                  labelText: "Telephone Number",
-                                                  prefixIcon: Icon(Icons.phone,
-                                                      color: Colors.blueGrey),
-                                                  labelStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .display1,
-                                                  fillColor: Colors.white,
-                                                  filled: true,
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                ),
-                                                validator: (input) => input
-                                                            .length !=
-                                                        10
-                                                    ? 'Your telephone number is incorrect'
-                                                    : null,
-                                                onChanged: (input) {
-                                                  setState(() {
-                                                    telenumber = input;
-                                                  });
-                                                },
-                                                keyboardType: TextInputType.phone,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .display1)),
-                                      ),
-                                    ),
-                                  ),*/
-
-                                  //Email ADDRESS
-                                  Padding(
-                                    padding: EdgeInsets.only(
-                                      top: 18.0,
-                                    ),
-                                    child: Opacity(
-                                      opacity: 0.8,
-                                      child: Container(
-                                        child: new Center(
-                                            child: new TextFormField(
-                                                decoration: new InputDecoration(
-                                                  labelText: "Email",
-                                                  prefixIcon: Icon(Icons.email,
-                                                      color: Colors.blueGrey),
-                                                  labelStyle: Theme.of(context)
-                                                      .textTheme
-                                                      .display1,
-                                                  fillColor: Colors.white,
-                                                  filled: true,
-                                                  focusedBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                  enabledBorder:
-                                                      OutlineInputBorder(
-                                                    borderSide: BorderSide(
-                                                        color: Color(0xFF185a9d),
-                                                        style: BorderStyle.solid,
-                                                        width: 1),
-                                                    borderRadius:
-                                                        new BorderRadius.circular(
-                                                            22.0),
-                                                  ),
-                                                ),
-                                                validator: (input) => input
-                                                        .isEmpty
-                                                    ? 'Please type your email here'
-                                                    : null,
-                                                onChanged: (input) {
-                                                  setState(() {
-                                                    email = input;
-                                                  });
-                                                },
-                                                keyboardType:
-                                                    TextInputType.emailAddress,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .display1)),
-                                      ),
                                     ),
                                   ),
                                   Center(
@@ -387,8 +214,9 @@ class _SignupState extends State<Signup> {
                                             ),
                                             validator: (input) {
                                               Pattern pattern =
-                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$';
-                                              RegExp regex = new RegExp(pattern);
+                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
+                                              RegExp regex =
+                                                  new RegExp(pattern);
                                               if (input.length < 6) {
                                                 return 'Your password needs to be at least 6 characters';
                                               } else {
@@ -489,28 +317,43 @@ class _SignupState extends State<Signup> {
                                     children: <Widget>[
                                       Expanded(
                                         child: ListTile(
-                                          title: Text("staff",style: Theme.of(context).textTheme.subhead,),
-                                          leading: Radio(value: 'staff',
-
+                                          title: Text(
+                                            "staff",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subhead,
+                                          ),
+                                          leading: Radio(
+                                            value: 'staff',
                                             activeColor: Colors.white,
-                                            groupValue: role,onChanged: (input) {
+                                            groupValue: role,
+                                            onChanged: (input) {
                                               setState(() {
                                                 role = input;
                                               });
-                                            },),
+                                            },
+                                          ),
                                         ),
                                       ),
                                       Expanded(
                                         child: ListTile(
-                                          title: Text("admin",style: Theme.of(context).textTheme.subhead,),
-                                          leading: Radio(value: 'admin',
-
+                                          title: Text(
+                                            "admin",
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subhead,
+                                          ),
+                                          leading: Radio(
+                                            value: 'admin',
                                             activeColor: Colors.white,
-                                            groupValue: role,onChanged: (input) {
+                                            groupValue: role,
+
+                                            onChanged: (input) {
                                               setState(() {
                                                 role = input;
                                               });
-                                            },),
+                                            },
+                                          ),
                                         ),
                                       )
                                     ],
@@ -528,7 +371,7 @@ class _SignupState extends State<Signup> {
                                       child: InkWell(
                                         onTap: () async {
                                           if (_formKey.currentState
-                                             .validate()) {
+                                              .validate()) {
                                             setState(() {
                                               loading = true;
                                             });
@@ -536,68 +379,100 @@ class _SignupState extends State<Signup> {
                                                 .registerWithEmailAndPassword(
                                                     email,
                                                     password,
-                                                   role,
-
+                                                    role,
                                                     context);
-                                          showDialog(context: context,
-                                              builder: (context){
-                                                return Dialog(
-                                                    shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(20.0),),
-
-                                                  child: Container(
-                                                    height: 150.0,
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding:  EdgeInsets.only(top: 20.0),
-                                                          child: Text("Account is created",style: Theme.of(context).textTheme.display1,),
-                                                        ),
-                                                        Padding(
-                                                          padding:  EdgeInsets.all(30.0),
-                                                          child: Material(
-                                                            borderRadius: BorderRadius.circular(20.0),
-                                                            elevation: 4.0,
-                                                            child: InkWell(
-                                                              onTap: ()  {
-                                                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>Homepage()),);
-                                                              },
-                                                              child: Container(
-                                                                height: 40.0,
-                                                                width: 100.0,
-                                                                decoration: BoxDecoration(
-                                                                  gradient: LinearGradient(
-                                                                    begin: Alignment.topLeft,
-                                                                    end: Alignment.bottomRight,
-                                                                    colors: [
-                                                                      const Color(0xFF185a9d),
-                                                                      const Color(0xFF43cea2)
-                                                                    ],
+                                            showDialog(
+                                                context: context,
+                                                builder: (context) {
+                                                  return Dialog(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              20.0),
+                                                    ),
+                                                    child: Container(
+                                                      height: 150.0,
+                                                      child: Column(
+                                                        children: <Widget>[
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.only(
+                                                                    top: 20.0),
+                                                            child: Text(
+                                                              "Account is created",
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .display1,
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                EdgeInsets.all(
+                                                                    30.0),
+                                                            child: Material(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20.0),
+                                                              elevation: 4.0,
+                                                              child: InkWell(
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            20.0),
+                                                                onTap: () {
+                                                                  Navigator
+                                                                      .pushReplacement(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                Homepage()),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  height: 40.0,
+                                                                  width: 100.0,
+                                                                  decoration:
+                                                                      BoxDecoration(
+                                                                    gradient:
+                                                                        LinearGradient(
+                                                                      begin: Alignment
+                                                                          .topLeft,
+                                                                      end: Alignment
+                                                                          .bottomRight,
+                                                                      colors: [
+                                                                        const Color(
+                                                                            0xFF185a9d),
+                                                                        const Color(
+                                                                            0xFF43cea2)
+                                                                      ],
+                                                                    ),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20.0),
                                                                   ),
-                                                                  borderRadius: BorderRadius.circular(20.0),
-                                                                ),
-                                                                child: Center(
-                                                                  child: Text("okay",
-                                                                      style: Theme.of(context)
-                                                                          .textTheme
-                                                                          .subhead),
+                                                                  child: Center(
+                                                                    child: Text(
+                                                                        "okay",
+                                                                        style: Theme.of(context)
+                                                                            .textTheme
+                                                                            .subhead),
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
                                                           ),
-                                                        ),
-                                                      ],
+                                                        ],
+                                                      ),
                                                     ),
-                                                  ),
+                                                  );
+                                                });
 
-                                                );
-
-                                              });
-
-
-
-
-                                          if (result == null) {
+                                            if (result == null) {
                                               setState(() {
                                                 error =
                                                     "please supply a vaild email";
@@ -617,7 +492,8 @@ class _SignupState extends State<Signup> {
                                                 const Color(0xFF43cea2)
                                               ],
                                             ),
-                                            borderRadius: BorderRadius.circular(20.0),
+                                            borderRadius:
+                                                BorderRadius.circular(20.0),
                                           ),
                                           child: Center(
                                             child: Text("Sign up",
@@ -629,8 +505,6 @@ class _SignupState extends State<Signup> {
                                       ),
                                     ),
                                   ),
-
-
                                 ],
                               ),
                             ),
