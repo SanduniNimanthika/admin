@@ -5,6 +5,9 @@ import 'package:admin/commanpages/textstyle.dart';
 import 'package:admin/mainpages/splash.dart';
 import 'package:admin/services/authentication.dart';
 import 'package:provider/provider.dart';
+import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
+import 'package:admin/StoreDisplay/catergorynotifer.dart';
+import 'package:admin/StoreDisplay/productnotifer.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -15,14 +18,27 @@ class MyApp extends StatelessWidget {
         return OrientationBuilder(
           builder: (context, orientation) {
             SizeConfig().init(constraints, orientation);
-            return  StreamProvider<Staff>.value(
-                value: AuthService().user,
-                child: MaterialApp(
-                  title: 'Ecommerce application',
-                  theme:  AppTheme.lightTheme,
-                  home: Splash(),
-                  debugShowCheckedModeBanner: false,
-                )
+            return (MultiProvider(
+                providers: [
+                  ChangeNotifierProvider(
+                    create: (context) => CatergoryNotifier(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => SubCatergoryNotifier(),
+                  ),
+
+            ChangeNotifierProvider(
+            create: (context) => ProductNotifier(),
+            ),
+               StreamProvider<Staff>.value(
+                  value: AuthService().user)],
+                  child: MaterialApp(
+                    title: 'Ecommerce application',
+                    theme:  AppTheme.lightTheme,
+                    home: Splash(),
+                    debugShowCheckedModeBanner: false,
+                  )
+              )
             );
           },
         );

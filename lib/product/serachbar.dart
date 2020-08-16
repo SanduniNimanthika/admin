@@ -21,3 +21,15 @@ class SearchServiceSub {
         .getDocuments();
   }
 }
+
+
+class SearchServiceProduct {
+  searchByName(String searchField) {
+    return Firestore.instance
+        .collection('Product')
+        .where('productsearchkey',
+        isEqualTo: searchField.substring(0, 1).toUpperCase())
+        .getDocuments();
+  }
+}
+

@@ -1,5 +1,7 @@
+import 'package:admin/StoreDisplay/catergorynotifer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/module/catergory.dart';
+import 'package:admin/StoreDisplay/editcatergory.dart';
 
 class CatergoryService {
   final String uid;
@@ -21,31 +23,46 @@ class CatergoryService {
         .setData({'uid': id, 'catergory': catergory,'catergorysearchkey':catergorysearchkey});
   }
 
+}
 
-  //updatedate
-  Future catupdate(String catergory) async {
-    String id = catergoryCollection.document().documentID;
-    return catergoryCollection
-        .document(uid)
-        .updateData({'uid': id, 'catergory': catergory});
-  }
 
-  // data from snapshot
-  List<Catergory> _catergoryDataFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc){
-     return Catergory(
-       catkey: doc.documentID,
-       catergorysearchkey: doc.data['catergorysearchkey'],
-       catergory: doc.data['catergory']??'',
+getCatergories(CatergoryNotifier catergoryNotifier) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('Catergory')
+      .orderBy("catergory", descending:false)
+      .getDocuments();
 
-    );
-  }).toList();}
+  List<Catergory> _catergoryList = [];
 
-//get stream
-  Stream<List<Catergory>> get catergory {
-    return catergoryCollection
-        .snapshots()
-        .map(_catergoryDataFromSnapshot);
-  }
+  snapshot.documents.forEach((document) {
+    Catergory catergory = Catergory.fromMap(document.data)!=null?Catergory.fromMap(document.data):null;
+    _catergoryList.add(catergory);
+  });
 
+  catergoryNotifier.catergoryList = _catergoryList;
+}
+
+
+uploadCatergory(Catergory catergory,Function catergoryUploaded)async{
+
+  _uploadCatergory(catergory,catergoryUploaded );
+
+}
+
+_uploadCatergory(Catergory catergory,/* bool isUpdating*/ Function catergoryUploaded) async {
+  CollectionReference catergoryCollection = Firestore.instance.collection('Catergory');
+
+  await catergoryCollection.document(catergory.catkey).updateData(catergory.toMap());
+  catergoryUploaded(catergory);
+
+
+}
+
+
+
+deleteCatergory(Catergory catergory, Function catergoryDeleted) async {
+
+
+  await Firestore.instance.collection('Catergory').document(catergory.catkey).delete();
+  catergoryDeleted(catergory);
 }

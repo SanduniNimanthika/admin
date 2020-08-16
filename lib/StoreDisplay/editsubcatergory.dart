@@ -1,6 +1,7 @@
 
+import 'package:admin/StoreDisplay/productlist.dart';
+import 'package:admin/StoreDisplay/seracheditcatergory.dart';
 import 'package:admin/database/subcatdatabse.dart';
-import 'package:admin/product/searchcat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
@@ -8,33 +9,46 @@ import 'package:admin/commanpages/loading.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
+import 'package:admin/module/subcar.dart';
+import 'package:provider/provider.dart';
 
 
-class AddSubCat extends StatefulWidget {
+class EditSubCatergory extends StatefulWidget {
   final String text;
 
-  AddSubCat({Key key,@required this.text}):super(key:key);
+  EditSubCatergory({Key key,@required this.text}):super(key:key);
 
   @override
-  _AddSubCatState createState() => _AddSubCatState(text: text);
+  _EditSubCatergoryState createState() => _EditSubCatergoryState(text: text);
 }
 
 
 
-class _AddSubCatState extends State<AddSubCat> {
-  bool loading = false;
-  String subcatergory = '';
-  String error = '';
+class _EditSubCatergoryState extends State<EditSubCatergory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  SubCatergoryService _subcategoryService = SubCatergoryService();
+  SubCatergory _currentSubCatergory;
+  bool loading = false;
+  @override
+  void initState() {
+    super.initState();
+    SubCatergoryNotifier subcatergoryNotifier = Provider.of<SubCatergoryNotifier>(
+        context, listen: false);
 
-  String _currentCatergory;
-  String subcatergorysearchkey='';
+    if (subcatergoryNotifier.currentSubCatergory != null) {
+      _currentSubCatergory = subcatergoryNotifier.currentSubCatergory;
+    } else {
+      _currentSubCatergory = SubCatergory();
+    }
+  }
+  _onSubCatergoryUploaded(SubCatergory subcatergory) {
+    SubCatergoryNotifier subcatergoryNotifier =
+    Provider.of<SubCatergoryNotifier>(context, listen: false);
+    subcatergoryNotifier.addSubCatergory(subcatergory);
 
-
+  }
   final String text;
-  _AddSubCatState({Key key,@required this.text});
+  _EditSubCatergoryState({Key key,@required this.text});
 
 
   @override
@@ -48,7 +62,7 @@ class _AddSubCatState extends State<AddSubCat> {
             children: <Widget>[
               Stack(
                 children: <Widget>[
-                 Container(
+                  Container(
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
@@ -83,11 +97,12 @@ class _AddSubCatState extends State<AddSubCat> {
                         color: Colors.white,
                       ),
                       onPressed: () {
+                        Navigator.pop(context);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
                                 builder: (context) =>
-                                    ProductCollection()));
+                                    Productlist()));
                       },
                     ),
                   ),
@@ -157,7 +172,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                                       child: IconButton(icon: Icon(Icons.check,color: Colors.white,),
                                                         onPressed: (){
                                                           setState(() {
-                                                            _currentCatergory=text;
+                                                            _currentSubCatergory.catergory=text;
                                                           });
                                                         },
                                                       ),
@@ -180,7 +195,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                                                 context,
                                                                 MaterialPageRoute(
                                                                     builder: (context) =>
-                                                                        SearchCatergory()));
+                                                                        SearchEditCatergory()));
                                                           },
                                                           child: Icon(Icons.search))),
                                                 ),
@@ -192,7 +207,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                     ],
                                   ),
                                 ),
-                                Text(error,style:Theme.of(context).textTheme.display1.copyWith(color: Colors.red,fontSize: 12.0)),
+
 
 
 
@@ -203,6 +218,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                     child: Container(
                                       child: new Center(
                                           child: new TextFormField(
+                                            initialValue: _currentSubCatergory.subcatergory,
                                               decoration: new InputDecoration(
                                                 labelText: "SubCatergory Name",
                                                 prefixIcon: Icon(Icons.add,
@@ -245,7 +261,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                               },
                                               onChanged: (input) {
                                                 setState(() {
-                                                  subcatergory = input;
+                                                  _currentSubCatergory.subcatergory = input;
                                                 });
                                               },
                                               keyboardType: TextInputType.text,
@@ -263,6 +279,7 @@ class _AddSubCatState extends State<AddSubCat> {
 
                                     child: new Center(
                                         child: new TextFormField(
+                                          initialValue: _currentSubCatergory.subcatergorysearchkey,
                                             decoration: new InputDecoration(
                                               labelText: "SubCatergory Searchkey",
                                               prefixIcon: Icon(Icons.youtube_searched_for,
@@ -297,7 +314,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                                 : null,
                                             onChanged: (input) {
                                               setState(() {
-                                                subcatergorysearchkey = input;
+                                                _currentSubCatergory.subcatergorysearchkey = input;
                                               });
                                             },
                                             keyboardType: TextInputType.text,
@@ -318,112 +335,9 @@ class _AddSubCatState extends State<AddSubCat> {
                                     elevation: 4.0,
                                     child: InkWell(
                                       onTap: () async {
-                                        if (_formKey.currentState
-                                            .validate()) {
-                                          setState(() {
-                                            loading = true;
-                                          });
-                                          if(_currentCatergory!=null){
-                                          await _subcategoryService
-                                              .createSubCatData(subcatergory,_currentCatergory,subcatergorysearchkey);
-
-                                          showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return Dialog(
-                                                  shape:
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius.circular(
-                                                        20.0),
-                                                  ),
-                                                  child: Container(
-                                                    height: 150.0,
-                                                    child: Column(
-                                                      children: <Widget>[
-                                                        Padding(
-                                                          padding:
-                                                          EdgeInsets.only(
-                                                              top: 20.0),
-                                                          child: Text(
-                                                            "Subcatergory is added",
-                                                            style: Theme.of(
-                                                                context)
-                                                                .textTheme
-                                                                .display1,
-                                                          ),
-                                                        ),
-                                                        Padding(
-                                                          padding:
-                                                          EdgeInsets.all(
-                                                              30.0),
-                                                          child: Material(
-                                                            borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                20.0),
-                                                            elevation: 4.0,
-                                                            child: InkWell(
-                                                              borderRadius:
-                                                              BorderRadius
-                                                                  .circular(
-                                                                  20.0),
-                                                              onTap: () {
-                                                                Navigator.push(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder: (context) =>
-                                                                            ProductCollection()));
-                                                              },
-                                                              child:
-                                                              Container(
-                                                                height: 40.0,
-                                                                width: 100.0,
-                                                                decoration:
-                                                                BoxDecoration(
-                                                                  gradient:
-                                                                  LinearGradient(
-                                                                    begin: Alignment
-                                                                        .topLeft,
-                                                                    end: Alignment
-                                                                        .bottomRight,
-                                                                    colors: [
-                                                                      const Color(
-                                                                          0xFF185a9d),
-                                                                      const Color(
-                                                                          0xFF43cea2)
-                                                                    ],
-                                                                  ),
-                                                                  borderRadius:
-                                                                  BorderRadius.circular(
-                                                                      20.0),
-                                                                ),
-                                                                child: Center(
-                                                                  child: Text(
-                                                                      "okay",
-                                                                      style: Theme.of(context)
-                                                                          .textTheme
-                                                                          .subhead),
-                                                                ),
-                                                              ),
-                                                            ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              });
+                                        saveEdit();
 
 
-                                        }
-                                        else{
-                                        setState(() {
-                                          error =
-                                          "please supply a catergory name\n and click blue botton";
-                                          loading = false;
-                                        });}
-                                        }
                                       },
                                       child: Container(
                                         height: 40,
@@ -444,7 +358,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                               style: Theme.of(context)
                                                   .textTheme
                                                   .subhead),
-                                         ),
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -463,6 +377,76 @@ class _AddSubCatState extends State<AddSubCat> {
         ),
       ),
     );
+  }
+
+  saveEdit() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    _formKey.currentState.save();
+
+    uploadSubCatergory(
+        _currentSubCatergory /*widget.isUpdating*/,
+        _onSubCatergoryUploaded
+    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Container(
+              height: 150.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Subcatergory is updated",
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20.0),
+                      elevation: 4.0,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20.0),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Productlist()));
+                        },
+                        child: Container(
+                          height: 40.0,
+                          width: 100.0,
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                              colors: [
+                                const Color(0xFF185a9d),
+                                const Color(0xFF43cea2)
+                              ],
+                            ),
+                            borderRadius: BorderRadius.circular(20.0),
+                          ),
+                          child: Center(
+                            child: Text("okay",
+                                style: Theme.of(context).textTheme.subhead),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 

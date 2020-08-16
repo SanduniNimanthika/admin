@@ -1,15 +1,15 @@
-import 'package:admin/product/addsubcat.dart';
+import 'package:admin/StoreDisplay/editproduct.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/product/serachbar.dart';
 
 
-class SearchCatergory extends StatefulWidget {
+class EditSearchSubCatergory extends StatefulWidget {
   @override
-  _SearchCatergoryState createState() => new _SearchCatergoryState();
+  _EditSearchSubCatergoryState createState() => new _EditSearchSubCatergoryState();
 }
 
-class _SearchCatergoryState extends State<SearchCatergory> {
+class _EditSearchSubCatergoryState extends State<EditSearchSubCatergory> {
   var queryResultSet = [];
   var tempSearchStore = [];
 
@@ -21,9 +21,8 @@ class _SearchCatergoryState extends State<SearchCatergory> {
       });
     }
 
-
     if (queryResultSet.length == 0 && value.length == 1) {
-      SearchService().searchByName(value).then((QuerySnapshot docs) {
+      SearchServiceSub().searchByName(value).then((QuerySnapshot docs) {
         for (int i = 0; i < docs.documents.length; ++i) {
           queryResultSet.add(docs.documents[i].data);
           setState(() {
@@ -34,8 +33,8 @@ class _SearchCatergoryState extends State<SearchCatergory> {
       tempSearchStore = [];
       queryResultSet.forEach((element) {
         queryResultSet.forEach((element) {
-          if (element['catergory'].toLowerCase().contains(value.toLowerCase()) ==  true) {
-            if (element['catergory'].toLowerCase().indexOf(value.toLowerCase()) ==0) {
+          if (element['subcatergory'].toLowerCase().contains(value.toLowerCase()) ==  true) {
+            if (element['subcatergory'].toLowerCase().indexOf(value.toLowerCase()) ==0) {
               setState(() {
                 tempSearchStore.add(element);
               });
@@ -70,29 +69,30 @@ class _SearchCatergoryState extends State<SearchCatergory> {
                       },
                     ),
                     contentPadding: EdgeInsets.only(left: 25.0),
-                    hintText: 'Search by Caterogry name',
+                    hintText: 'Search by SubCaterogry name',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.0))),
               ),
             ),
             SizedBox(height: 20.0),
             ListView(
-              shrinkWrap: true,
+                shrinkWrap: true,
                 children: tempSearchStore.map((element) {
                   return InkWell(
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSubCat(text:element['catergory'])));
-                    },
-                    child:Padding(
-                      padding: const EdgeInsets.only(top:15.0,left: 15.0,right: 15.0,bottom: 6),
-                      child: Material(
-                        elevation: 0.9,shadowColor: Colors.greenAccent,
-                        child: ListTile(
-                          title: Text(element['catergory'],style: Theme.of(context).textTheme.display1,
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>Editproduct(text:element['catergory'],text2:element['subcatergory'])));
+                      },
+                      child:Padding(
+                        padding: const EdgeInsets.only(top:15.0,left: 15.0,right: 15.0,bottom: 6),
+                        child: Material(
+                          elevation: 0.9,shadowColor: Colors.greenAccent,
+                          child: ListTile(
+                            title: Text(element['catergory'],style: Theme.of(context).textTheme.display1.copyWith(color: Colors.black87,fontSize: 25)),
+                            subtitle:Text(element['subcatergory'],style: Theme.of(context).textTheme.display1,
+                            ),
+                          ),
                         ),
-                        ),
-                      ),
-                    )
+                      )
                   );
                 }).toList()),
 

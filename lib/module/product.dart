@@ -7,7 +7,7 @@ class Product {
   int quntity;
   double price;
   String description;
-  List images;
+  String images;
   String productsearchkey;
 
   Product(
@@ -20,4 +20,37 @@ class Product {
       this.price,
       this.description,
       this.images, this.productsearchkey});
+
+
+
+
+  Product.fromMap(Map<String, dynamic> data) {
+    productkey = data['uid'];
+    productsearchkey= data['productsearchkey'];
+    catergory=data['catergory'];
+    subcatergory=data['subcatergory'];
+    productname=data['productname'];
+    type=data['type'];
+    quntity=data['quntity'];
+    price=data['price'];
+    description=data['description'];
+    images=data['images'];
+  }
+
+ Map<String, dynamic> toMap() {
+    return {
+      'uid': productkey,
+       'productsearchkey':productsearchkey,
+      'productname': productname,
+      'catergory': catergory,
+    'subcatergory':subcatergory,
+      'images': images,
+      'type': type,
+      'quntity':quntity,
+      'price':price,
+      'description':description
+    };
+ }
 }
+
+

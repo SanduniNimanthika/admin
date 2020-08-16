@@ -1,5 +1,6 @@
 import 'package:admin/module/subcar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
 
 class SubCatergoryService {
   final String uid;
@@ -23,32 +24,48 @@ class SubCatergoryService {
     });
   }
 
-  Future subcatergoryupdate(String subcatergory) async {
-    String id = subcatergoryCollection.document().documentID;
-    return subcatergoryCollection
-        .document(uid)
-        .updateData({'uid': id, 'subcatergory': subcatergory});
-  }
+}
 
 
-  // data from snapshot
-  List<SubCatergory> _subcatergoryDataFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc){
-      return SubCatergory(
-        subcatkey: doc.documentID,
-        subcatergorysearchkey: doc.data['subcatergorysearchkey'],
-        subcatergory: doc.data['subcatergory']??'',
-        catergory: doc.data['catergory']
 
-      );
-    }).toList();}
+getSubCatergories(SubCatergoryNotifier subcatergoryNotifier) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('SubCatergory')
 
-//get stream
-  Stream<List<SubCatergory>> get subcatergory{
-    return subcatergoryCollection
-        .snapshots()
-        .map(_subcatergoryDataFromSnapshot);
-  }
+      .orderBy("subcatergory", descending:true)
+      .getDocuments();
+
+  List<SubCatergory> _subcatergoryList = [];
+
+  snapshot.documents.forEach((document) {
+    SubCatergory subcatergory = SubCatergory.fromMap(document.data);
+    _subcatergoryList.add(subcatergory);
+  });
+
+  subcatergoryNotifier.subcatergoryList =  _subcatergoryList;
+}
 
 
+uploadSubCatergory(SubCatergory subcatergory,Function subcatergoryUploaded)async{
+
+
+
+  _uploadSubCatergory(subcatergory,subcatergoryUploaded );
+}
+
+_uploadSubCatergory(SubCatergory subcatergory,/* bool isUpdating*/ Function subcatergoryUploaded) async {
+  CollectionReference subcatergoryCollection = Firestore.instance.collection('SubCatergory');
+
+  await subcatergoryCollection.document(subcatergory.subcatkey).updateData(subcatergory.toMap());
+  subcatergoryUploaded(subcatergory);
+
+
+}
+
+
+
+deleteSubCatergory(SubCatergory subcatergory, Function subcatergoryDeleted) async {
+
+  await Firestore.instance.collection('SubCatergory').document(subcatergory.subcatkey).delete();
+  subcatergoryDeleted(subcatergory);
 }

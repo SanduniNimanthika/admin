@@ -2,12 +2,9 @@ import 'package:admin/database/Catdatabase.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
-import 'package:admin/mainpages/home.dart';
 import 'package:admin/commanpages/loading.dart';
-import 'package:admin/services/authentication.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/database/Catdatabase.dart';
 import 'package:admin/product/productcollection.dart';
 
 class AddCat extends StatefulWidget {

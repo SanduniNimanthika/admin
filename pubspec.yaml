@@ -29,7 +29,9 @@ dependencies:
   image_picker: ^0.6.6+1
   firebase_storage: ^3.1.5
   flutter_typeahead: ^1.8.7
-  configurable_expansion_tile: ^1.0.0
+  carousel_slider: ^2.2.1
+  path: ^1.6.4
+  uuid: ^2.2.0
 
 
 

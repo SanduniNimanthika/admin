@@ -1,10 +1,8 @@
 import 'dart:ui';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:admin/StoreDisplay/productlist.dart';
-import 'package:admin/module/catergory.dart';
-import 'package:admin/database/Catdatabase.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/StoreDisplay/editsubcatergory.dart';
+import 'package:admin/StoreDisplay/productdisplay.dart';
+import 'package:admin/StoreDisplay/subcatergorylist.dart';
+import 'package:admin/module/subcar.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,16 +14,15 @@ import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
 import 'package:admin/StoreDisplay/catergorynotifer.dart';
 import 'package:admin/StoreDisplay/productnotifer.dart';
 import 'package:admin/database/productdatabase.dart';
-import 'package:admin/StoreDisplay/productdisplay.dart';
-import 'package:admin/StoreDisplay/editcatergory.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-
-class SubCatergorylist extends StatefulWidget {
+class Productlist extends StatefulWidget {
   @override
-  _SubCatergorylistState createState() => _SubCatergorylistState();
+  _ProductlistState createState() => _ProductlistState();
 }
 
-class _SubCatergorylistState extends State<SubCatergorylist> {
+class _ProductlistState extends State<Productlist> {
   @override
   void initState() {
     SubCatergoryNotifier subcatergoryNotifier =
@@ -47,122 +44,44 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
         Provider.of<SubCatergoryNotifier>(context);
     ProductNotifier productNotifier = Provider.of<ProductNotifier>(context);
 
-    _onCatergoryDeleted(Catergory catergory) {
+    _onSubCatergoryDeleted(SubCatergory subcatergory) {
       Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductCollection()));
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return SubCatergorylist();}));
 
-      catergoryNotifier.deleteCatergory(catergory);
+      subcatergoryNotifier.deleteSubCatergory(subcatergory);
     }
 
     return SafeArea(
-      child: Scaffold(
-        key: _key,
-        appBar: _customAppBar(
+        child: Scaffold(
+      key: _key,
+      appBar: _customAppBar(
           _key,
           context,
-          catergoryNotifier.currentCatergory.catergory != null
-              ? catergoryNotifier.currentCatergory.catergory
-              : null,
-        ),
-        drawer: Drawer(
-          // linear background
-          child: Container(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-                  tileMode: TileMode.repeated,
-                ),
-              ),
-              child: Column(
-                children: <Widget>[
-                  Expanded(
-                    flex: 2,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(23.0),
-                        child: Text(
-                          catergoryNotifier.currentCatergory.catergory,
-                          style: Theme.of(context)
-                              .textTheme
-                              .subtitle
-                              .copyWith(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 9,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: subcatergoryNotifier.subcatergoryList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          if (catergoryNotifier.currentCatergory.catergory ==
-                              subcatergoryNotifier
-                                  .subcatergoryList[index].catergory) {
-                            return Column(
-                              children: <Widget>[
-                                Divider(
-                                  color: Colors.blueGrey,
-                                  thickness: 1,
-                                ),
-                                ListTile(
-                                  title: Padding(
-                                    padding: EdgeInsets.only(left: 10.0),
-                                    child: InkWell(
-                                      onTap: () {
-                                        subcatergoryNotifier
-                                                .currentSubCatergory =
-                                            subcatergoryNotifier
-                                                .subcatergoryList[index];
-                                        Navigator.of(context).push(
-                                            MaterialPageRoute(builder:
-                                                (BuildContext context) {
-                                          return Productlist();
-                                        }));
-                                      },
-                                      child: Text(
-                                          subcatergoryNotifier
-                                              .subcatergoryList[index]
-                                              .subcatergory,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead),
-                                    ),
-                                  ),
-                                )
-                              ],
-                            );
-                          } else {
-                            return Container();
-                          }
-                        }),
-                  ),
-                ],
-              )),
-        ),
-        body: ListView.builder(
-            shrinkWrap: true,
-            itemCount: productNotifier.productList.length,
-            itemBuilder: (BuildContext context, int index) {
-              return (catergoryNotifier.currentCatergory.catergory ==
-                      productNotifier.productList[index].catergory)
-                  ? Padding(
-                      padding:
-                          EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
-                      child: InkWell(
-                        onTap: () {
-                          productNotifier.currentProduct =
-                              productNotifier.productList[index];
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ProductDisplay();
-                          }));
-                        },
+          subcatergoryNotifier.currentSubCatergory.subcatergory != null
+              ? subcatergoryNotifier.currentSubCatergory.subcatergory
+              : null),
+      body: ListView.builder(
+          shrinkWrap: true,
+          itemCount: productNotifier.productList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return (catergoryNotifier.currentCatergory.catergory ==
+                        productNotifier.productList[index].catergory &&
+                    subcatergoryNotifier.currentSubCatergory.subcatergory ==
+                        productNotifier.productList[index].subcatergory)
+                ? InkWell(
+                    onTap: () {
+                      productNotifier.currentProduct =
+                          productNotifier.productList[index];
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        return ProductDisplay();
+                      }));
+                    },
+                    child: Padding(
+                        padding:
+                            EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
                         child: Material(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(25.0),
@@ -182,42 +101,39 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                 child: Row(
                                   children: <Widget>[
                                     Expanded(
-                                        flex: 2,
-                                        child: Container(
+                                      flex: 2,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                      Radius.circular(25.0),
+                                                  bottomRight:
+                                                      Radius.circular(25.0))),
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                              3,
+                                          height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                              5,
+                                          child: Container(
                                             decoration: BoxDecoration(
                                                 shape: BoxShape.rectangle,
                                                 borderRadius: BorderRadius.only(
                                                     topLeft:
                                                         Radius.circular(25.0),
                                                     bottomRight:
-                                                        Radius.circular(25.0))),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                3,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  25.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  25.0)),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          productNotifier
-                                                              .productList[
-                                                                  index]
-                                                              .images),
-                                                      fit: BoxFit.fill)),
-                                            ))),
+                                                        Radius.circular(25.0)),
+                                                image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        productNotifier
+                                                            .productList[index]
+                                                            .images),
+                                                    fit: BoxFit.fill)),
+                                          )),
+                                    ),
                                     Expanded(
                                       flex: 4,
                                       child: Padding(
@@ -232,13 +148,15 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                productNotifier.productList[index]
+                                                productNotifier
+                                                    .productList[index]
                                                     .productname,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .subhead
                                                     .copyWith(
-                                                        color: Color(0xFF185a9d),
+                                                        color:
+                                                            Color(0xFF185a9d),
                                                         fontSize: 20.0),
                                               ),
                                             ),
@@ -247,7 +165,7 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                               child: Container(
                                                 child: Row(
                                                   mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                      MainAxisAlignment.center,
                                                   children: <Widget>[
                                                     Text("In Stock :  ",
                                                         style: Theme.of(context)
@@ -262,8 +180,8 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                                           .textTheme
                                                           .display1
                                                           .copyWith(
-                                                          color:
-                                                          Colors.red),
+                                                              color:
+                                                                  Colors.red),
                                                     ),
                                                   ],
                                                 ),
@@ -272,10 +190,7 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                             Expanded(
                                               flex: 1,
                                               child: Text(
-                                                'Rs.${productNotifier
-                                                    .productList[index]
-                                                    .price
-                                                    .toString()}',
+                                                'Rs.${productNotifier.productList[index].price.toString()}',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .display1,
@@ -285,45 +200,34 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                         ),
                                       ),
                                     ),
-
                                   ],
                                 ),
                               )),
-                        ),
-                      ))
-                  : Container();
-            }),
-
-        floatingActionButton: Floting()
-      /*  floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          onPressed: () {
-            deleteCatergory(
-                catergoryNotifier.currentCatergory, _onCatergoryDeleted);
-          },
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-        ),*/
-      ),
-    );
+                        )),
+                  )
+                : Container();
+          }),
+      floatingActionButton: Flotinng()
+    ));
   }
 }
 
 
-class Floting extends StatelessWidget {
+class Flotinng extends StatelessWidget {
   @override
 
   Widget build(BuildContext context) {
-    CatergoryNotifier catergoryNotifier =
-    Provider.of<CatergoryNotifier>(context);
-    _onCatergoryDeleted(Catergory catergory) {
+    SubCatergoryNotifier subcatergoryNotifier =
+    Provider.of<SubCatergoryNotifier>(context);
+   
+    _onSubCatergoryDeleted(SubCatergory subcatergory) {
       Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductCollection()));}
+      Navigator.of(context).push(
+          MaterialPageRoute(builder: (BuildContext context) {
+            return SubCatergorylist();}));
+
+      subcatergoryNotifier.deleteSubCatergory(subcatergory);
+    }
     return FloatingActionButton(
       backgroundColor: Colors.red,
       onPressed: () {
@@ -334,8 +238,8 @@ class Floting extends StatelessWidget {
           then((docs){
             if (docs.documents[0].exists) {
               if (docs.documents[0].data['role'] == 'admin'){
-                deleteCatergory(
-                    catergoryNotifier.currentCatergory, _onCatergoryDeleted);
+                deleteSubCatergory(
+                    subcatergoryNotifier.currentSubCatergory, _onSubCatergoryDeleted);
               }else {
                 showDialog(
                     context: context,
@@ -426,7 +330,6 @@ class Floting extends StatelessWidget {
 
         });
 
-
       },
       child: Icon(
         Icons.delete,
@@ -437,12 +340,8 @@ class Floting extends StatelessWidget {
   }
 }
 
-
-Widget _customAppBar(
-  GlobalKey<ScaffoldState> globalKey,
-  BuildContext context,
-  String catergoryname,
-) {
+Widget _customAppBar(GlobalKey<ScaffoldState> globalKey, BuildContext context,
+    String subcatergoryname) {
   return PreferredSize(
     preferredSize: Size.fromHeight(12 * SizeConfig.heightMultiplier),
     child: Material(
@@ -461,44 +360,33 @@ Widget _customAppBar(
               left: 2.2 * SizeConfig.widthMultiplier,
               right: 2.2 * SizeConfig.widthMultiplier),
           child: Center(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    onPressed: () {
-                      UserAccess().authorizedAccess(context);
-
-                    },
-                    icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.list,
-                      color: Colors.white,
-                      size: 5 * SizeConfig.heightMultiplier,
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 1 * SizeConfig.widthMultiplier,
+                  right: 2.2 * SizeConfig.widthMultiplier),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    flex: 1,
+                    child: IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return SubCatergorylist();
+                        }));
+                      },
+                      icon: Icon(Icons.arrow_back_ios, color: Colors.white),
                     ),
-                    onPressed: () {
-                      globalKey.currentState.openDrawer();
-                    },
                   ),
-                ),
-                Expanded(
-                  flex: 7,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                        left: 2.2 * SizeConfig.widthMultiplier,
-                        right: 2.2 * SizeConfig.widthMultiplier),
+                  Expanded(
+                    flex: 5,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
                         Expanded(
                             flex: 5,
                             child: Text(
-                              catergoryname,
+                              subcatergoryname,
                               style: Theme.of(context).textTheme.subtitle.copyWith(color: Colors.white),
                             )),
                         Expanded(
@@ -513,12 +401,7 @@ Widget _customAppBar(
                                     color: Colors.white,
                                   ),
                                   onPressed: () {
-                                    UserAccessEdit().authorizedAccess(context);
-                                   // Navigator.of(context).push(
-                                   //     MaterialPageRoute(
-                                     //       builder: (BuildContext context) {
-                                   //   return EditCatergory();
-                                  //  }));
+                                   UserAccessSubCatEdit().authorizedAccess(context);
                                   },
                                 ),
                               ),
@@ -528,8 +411,8 @@ Widget _customAppBar(
                       ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

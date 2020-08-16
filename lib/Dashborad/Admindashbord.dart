@@ -10,11 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:admin/mainpages/home.dart';
 import 'package:admin/loginsignup/signup.dart';
 import 'package:admin/commanpages/loading.dart';
-
-
-
-import 'package:admin/mainpages/vieworder.dart';
 import 'package:admin/product/productcollection.dart';
+import 'package:admin/StoreDisplay/productnotifer.dart';
 
 class AdminPanel extends StatefulWidget {
   @override
@@ -31,6 +28,7 @@ class _AdminPanelState extends State<AdminPanel> {
 
   @override
   Widget build(BuildContext context) {
+    ProductNotifier productNotifier = Provider.of<ProductNotifier>(context);
     final staff = Provider.of<Staff>(context, listen: false);
     return SafeArea(
       child: StreamBuilder<Staff>(
@@ -72,7 +70,8 @@ class _AdminPanelState extends State<AdminPanel> {
                         padding: EdgeInsets.only(
                             left: 3 * SizeConfig.heightMultiplier,
                             top: 8 * SizeConfig.heightMultiplier),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
                               "Hello,",
@@ -105,7 +104,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                     context,
                                     MaterialPageRoute(builder: (context) => ProductCollection()));
                               },
-                              child: dashbord(context,"Product","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
+                              child: dashbord(context,"Product","images/dashbord/drug_basket.png",productNotifier.productList.length.toString(),MediaQuery.of(context).size.width,)
                             ),
 
 

@@ -1,7 +1,4 @@
 import 'package:admin/product/addproduct.dart';
-import 'package:admin/product/addsubcat.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/product/serachbar.dart';
@@ -24,8 +21,7 @@ class _SearchSubCatergoryState extends State<SearchSubCatergory> {
       });
     }
 
-    var capitalizedValue =
-        value.substring(0, 1).toUpperCase() + value.substring(1);
+
 
     if (queryResultSet.length == 0 && value.length == 1) {
       SearchServiceSub().searchByName(value).then((QuerySnapshot docs) {
@@ -62,6 +58,7 @@ class _SearchSubCatergoryState extends State<SearchSubCatergory> {
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: TextField(
+                style: Theme.of(context).textTheme.display1,
                 onChanged: (val) {
                   initiateSearch(val);
                 },
@@ -75,7 +72,7 @@ class _SearchSubCatergoryState extends State<SearchSubCatergory> {
                       },
                     ),
                     contentPadding: EdgeInsets.only(left: 25.0),
-                    hintText: 'Search by SubCaterogry name',
+                    hintText: 'Search by Caterogry name',
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(4.0))),
               ),
@@ -89,10 +86,13 @@ class _SearchSubCatergoryState extends State<SearchSubCatergory> {
                         Navigator.push(context, MaterialPageRoute(builder: (context)=>AddProduct(text:element['catergory'],text2:element['subcatergory'])));
                       },
                       child:Padding(
-                        padding: const EdgeInsets.only(top:15.0,left: 5.0),
-                        child: ListTile(
-                          title: Text(element['catergory'],style: Theme.of(context).textTheme.display1.copyWith(color: Colors.black87,fontSize: 25)),
-                            subtitle:Text(element['subcatergory'],style: Theme.of(context).textTheme.display1,
+                        padding: const EdgeInsets.only(top:15.0,left: 15.0,right: 15.0,bottom: 6),
+                        child: Material(
+                          elevation: 0.9,shadowColor: Colors.greenAccent,
+                          child: ListTile(
+                            title: Text(element['catergory'],style: Theme.of(context).textTheme.display1.copyWith(color: Colors.black87,fontSize: 25)),
+                              subtitle:Text(element['subcatergory'],style: Theme.of(context).textTheme.display1,
+                            ),
                           ),
                         ),
                       )
