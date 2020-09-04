@@ -63,10 +63,10 @@ getProducts(ProductNotifier productNotifier) async {
 
 uploadProductAndImage(Product product /*,bool isUpdating*/, File localFile,
     Function productUploaded) async {
-  // if (localFile != null) {
+   if (localFile != null) {
   print("uploading image");
 
-  var fileExtension = path.extension(localFile.path);
+  var fileExtension = path.extension(localFile.path)!=null?path.extension(localFile.path):null;
   print(fileExtension);
 
   var uuid = Uuid().v4();
@@ -84,6 +84,10 @@ uploadProductAndImage(Product product /*,bool isUpdating*/, File localFile,
 
   print("download url: $imageUrl");
   _uploadProduct(product, productUploaded, /*isUpdating*/ imageUrl: imageUrl);
+}else {
+     print('...skipping image upload');
+     _uploadProduct(product, productUploaded);
+   }
 }
 
 _uploadProduct(Product product, /* bool isUpdating*/ Function productUploaded,
