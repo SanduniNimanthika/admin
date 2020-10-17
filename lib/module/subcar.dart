@@ -3,8 +3,9 @@ class SubCatergory {
   String subcatergory;
   String catergory;
   String subcatergorysearchkey;
+  String catergorykey;
 
-  SubCatergory({this.subcatkey, this.subcatergory,this.catergory,this.subcatergorysearchkey});
+  SubCatergory({this.subcatkey, this.subcatergory,this.catergory,this.subcatergorysearchkey,this.catergorykey});
 
 
 
@@ -20,6 +21,7 @@ class SubCatergory {
     subcatergorysearchkey= data['subcatergorysearchkey'];
     catergory=data['catergory'];
     subcatergory=data['subcatergory'];
+    catergorykey=data['catergorykey'];
   }
 
  Map<String, dynamic> toMap() {
@@ -28,6 +30,7 @@ class SubCatergory {
       'subcatergorysearchkey': subcatergorysearchkey,
       'catergory':catergory,
       'subcatergory': subcatergory,
+      'catergorykey':catergorykey,
     };
  }
 }

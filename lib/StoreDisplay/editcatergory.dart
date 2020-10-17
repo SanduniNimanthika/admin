@@ -1,12 +1,16 @@
 import 'package:admin/StoreDisplay/subcatergorylist.dart';
 import 'package:admin/module/catergory.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:admin/commanpages/configue.dart';
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:admin/database/Catdatabase.dart';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class EditCatergory extends StatefulWidget {
   @override
   _EditCatergoryState createState() => _EditCatergoryState();
@@ -15,6 +19,7 @@ class EditCatergory extends StatefulWidget {
 class _EditCatergoryState extends State<EditCatergory> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Catergory _currentCatergory;
+
   bool loading = false;
   @override
   void initState() {
@@ -27,7 +32,11 @@ class _EditCatergoryState extends State<EditCatergory> {
     } else {
       _currentCatergory = Catergory();
     }
+
+
+
   }
+
   _onCatergoryUploaded(Catergory catergory) {
     CatergoryNotifier catergoryNotifier =
     Provider.of<CatergoryNotifier>(context, listen: false);
@@ -225,7 +234,36 @@ class _EditCatergoryState extends State<EditCatergory> {
                           elevation: 4.0,
                           child: InkWell(
                             onTap: () async {
+
                               saveEdit();
+                              Firestore.instance.collection('SubCatergory').where(
+                                  "catergorykey",
+                                  isEqualTo: _currentCatergory.catkey)
+                                  .getDocuments()
+                                  .then((querySnapshot) {
+                                querySnapshot.documents
+                                    .forEach((result) {
+                                      String id=result.data['uid'];
+                                  Firestore.instance.collection('SubCatergory').document(id).updateData({
+                                    'catergory':_currentCatergory.catergory
+                                  });
+
+                                });
+                              });
+                              Firestore.instance.collection('Product').where(
+                                  "catergorykey",
+                                  isEqualTo: _currentCatergory.catkey)
+                                  .getDocuments()
+                                  .then((querySnapshot) {
+                                querySnapshot.documents
+                                    .forEach((result) {
+                                  String id=result.data['uid'];
+                                  Firestore.instance.collection('Product').document(id).updateData({
+                                    'catergory':_currentCatergory.catergory
+                                  });
+
+                                });
+                              });
                             },
                             child: Container(
                               height: 40,
@@ -299,6 +337,7 @@ class _EditCatergoryState extends State<EditCatergory> {
                       child: InkWell(
                         borderRadius: BorderRadius.circular(20.0),
                         onTap: () {
+
                           Navigator.push(
                               context,
                               MaterialPageRoute(

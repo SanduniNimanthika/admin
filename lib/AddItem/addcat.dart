@@ -5,7 +5,7 @@ import 'package:admin/commanpages/configue.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/AddItem/productcollection.dart';
 
 class AddCat extends StatefulWidget {
   @override

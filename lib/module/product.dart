@@ -9,6 +9,10 @@ class Product {
   String description;
   String images;
   String productsearchkey;
+  double offer;
+  double offerprice;
+  String catergorykey;
+  String subcatergorykey;
 
   Product(
       {this.productkey,
@@ -19,7 +23,7 @@ class Product {
       this.quntity,
       this.price,
       this.description,
-      this.images, this.productsearchkey});
+      this.images, this.productsearchkey,this.offer,this.offerprice,this.catergorykey,this.subcatergorykey});
 
 
 
@@ -35,6 +39,10 @@ class Product {
     price=data['price'];
     description=data['description'];
     images=data['images'];
+    offer=data['offer'];
+     offerprice=data['offerprice'];
+     catergorykey=data['catergorykey'];
+     subcatergorykey=data['subcatergorykey'];
   }
 
  Map<String, dynamic> toMap() {
@@ -48,7 +56,11 @@ class Product {
       'type': type,
       'quntity':quntity,
       'price':price,
-      'description':description
+      'description':description,
+      'offer':offer,
+      'offerprice':offerprice,
+      'catergorykey':catergorykey,
+      'subcatergorykey':subcatergorykey,
     };
  }
 }

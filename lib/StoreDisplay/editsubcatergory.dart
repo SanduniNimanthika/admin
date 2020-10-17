@@ -1,4 +1,4 @@
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/StoreDisplay/productlist.dart';
 import 'package:admin/StoreDisplay/seracheditcatergory.dart';
 import 'package:admin/database/subcatdatabse.dart';
@@ -9,18 +9,19 @@ import 'package:admin/commanpages/loading.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
+import 'package:admin/notifer/subcatergorynotifier.dart';
 import 'package:admin/module/subcar.dart';
 import 'package:provider/provider.dart';
 
 
 class EditSubCatergory extends StatefulWidget {
   final String text;
+  final String text2;
 
-  EditSubCatergory({Key key,@required this.text}):super(key:key);
+  EditSubCatergory({Key key,@required this.text,@required this.text2}):super(key:key);
 
   @override
-  _EditSubCatergoryState createState() => _EditSubCatergoryState(text: text);
+  _EditSubCatergoryState createState() => _EditSubCatergoryState(text: text,text2: text2);
 }
 
 
@@ -48,7 +49,8 @@ class _EditSubCatergoryState extends State<EditSubCatergory> {
 
   }
   final String text;
-  _EditSubCatergoryState({Key key,@required this.text});
+  final String text2;
+  _EditSubCatergoryState({Key key,@required this.text,@required this.text2});
 
 
   @override
@@ -143,7 +145,7 @@ class _EditSubCatergoryState extends State<EditSubCatergory> {
                                                 padding:  EdgeInsets.only(left:10.0),
                                                 child: Center(child: Row(
                                                   children: <Widget>[
-                                                    Expanded(child: Text(text==null?'Search Catergory':text,style: Theme.of(context).textTheme.display1,)),
+                                                    Expanded(child: Text(text==null?_currentSubCatergory.catergory:text,style: Theme.of(context).textTheme.display1,)),
                                                   ],
                                                 )),
                                               ),
@@ -173,6 +175,7 @@ class _EditSubCatergoryState extends State<EditSubCatergory> {
                                                         onPressed: (){
                                                           setState(() {
                                                             _currentSubCatergory.catergory=text;
+                                                            _currentSubCatergory.catergorykey=text2;
                                                           });
                                                         },
                                                       ),
@@ -336,6 +339,20 @@ class _EditSubCatergoryState extends State<EditSubCatergory> {
                                     child: InkWell(
                                       onTap: () async {
                                         saveEdit();
+                                        Firestore.instance.collection('Product').where(
+                                            "subcatergorykey",
+                                            isEqualTo: _currentSubCatergory.subcatkey)
+                                            .getDocuments()
+                                            .then((querySnapshot) {
+                                          querySnapshot.documents
+                                              .forEach((result) {
+                                            String id=result.data['uid'];
+                                            Firestore.instance.collection('Product').document(id).updateData({
+                                              'subcatergory':_currentSubCatergory.subcatergory
+                                            });
+
+                                          });
+                                        });
 
 
                                       },

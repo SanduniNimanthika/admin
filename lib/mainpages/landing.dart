@@ -22,7 +22,8 @@ class _LandingPageState extends State<LandingPage> {
       return  Container(
         //child: AdminPanel(),
 
-        child: UserManagment().authorizedAccess(context),
+        child:
+        UserManagment().authorizedAccess(context),
       );
 
     }

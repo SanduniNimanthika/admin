@@ -1,5 +1,4 @@
 import 'dart:ui';
-import 'package:admin/StoreDisplay/editsubcatergory.dart';
 import 'package:admin/StoreDisplay/productdisplay.dart';
 import 'package:admin/StoreDisplay/subcatergorylist.dart';
 import 'package:admin/module/subcar.dart';
@@ -10,9 +9,9 @@ import 'package:admin/commanpages/configue.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/database/subcatdatabse.dart';
-import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/notifer/subcatergorynotifier.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/database/productdatabase.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -44,14 +43,7 @@ class _ProductlistState extends State<Productlist> {
         Provider.of<SubCatergoryNotifier>(context);
     ProductNotifier productNotifier = Provider.of<ProductNotifier>(context);
 
-    _onSubCatergoryDeleted(SubCatergory subcatergory) {
-      Navigator.pop(context);
-      Navigator.of(context).push(
-          MaterialPageRoute(builder: (BuildContext context) {
-            return SubCatergorylist();}));
 
-      subcatergoryNotifier.deleteSubCatergory(subcatergory);
-    }
 
     return SafeArea(
         child: Scaffold(
@@ -62,8 +54,13 @@ class _ProductlistState extends State<Productlist> {
           subcatergoryNotifier.currentSubCatergory.subcatergory != null
               ? subcatergoryNotifier.currentSubCatergory.subcatergory
               : null),
-      body: ListView.builder(
+      body: GridView.builder(
           shrinkWrap: true,
+        //  physics: ScrollPhysics(),
+          gridDelegate:
+          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio:
+          MediaQuery.of(context).size.width /
+              MediaQuery.of(context).size.height/0.85),
           itemCount: productNotifier.productList.length,
           itemBuilder: (BuildContext context, int index) {
             return (catergoryNotifier.currentCatergory.catergory ==
@@ -98,10 +95,10 @@ class _ProductlistState extends State<Productlist> {
                                       bottomRight: Radius.circular(25.0))),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Row(
+                                child: Column(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 2,
+                                      flex: 4,
                                       child: Container(
                                           decoration: BoxDecoration(
                                               shape: BoxShape.rectangle,
@@ -118,27 +115,54 @@ class _ProductlistState extends State<Productlist> {
                                                   .size
                                                   .height /
                                               5,
-                                          child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(25.0),
-                                                    bottomRight:
-                                                        Radius.circular(25.0)),
-                                                image: DecorationImage(
-                                                    image: NetworkImage(
-                                                        productNotifier
-                                                            .productList[index]
-                                                            .images),
-                                                    fit: BoxFit.fill)),
+                                          child: Stack(
+                                            children: <Widget>[
+
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(25.0),
+                                                        bottomRight:
+                                                            Radius.circular(25.0)),
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            productNotifier
+                                                                .productList[index]
+                                                                .images),
+                                                        fit: BoxFit.fill)),
+                                              ),
+                                              Align(
+                                                alignment: Alignment.bottomRight,
+                                                child:(productNotifier.productList[index].offer!=0) ?Container(
+                                                  height: 37,
+                                                  width: 57.0,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.red,
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.only(
+                                                        topLeft: Radius.circular(25.0),
+                                                        bottomRight: Radius.circular(25.0)),
+                                                  ),
+                                                  child: Center(
+                                                    child: Text( '${productNotifier.productList[index].offer.toString()}%',
+                                                        style: Theme.of(context)
+                                                            .textTheme
+                                                            .subhead
+
+                                                    ),
+                                                  ),
+                                                ):Container()
+                                              )
+                                            ],
                                           )),
                                     ),
                                     Expanded(
-                                      flex: 4,
+                                      flex:3 ,
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                            left: 8.0, right: 8.0),
+                                            left: 8.0, right: 8.0,top: 8.0),
                                         child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.center,
@@ -157,11 +181,11 @@ class _ProductlistState extends State<Productlist> {
                                                     .copyWith(
                                                         color:
                                                             Color(0xFF185a9d),
-                                                        fontSize: 20.0),
+                                                        fontSize: 18.0),
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 2,
+                                              flex: 1,
                                               child: Container(
                                                 child: Row(
                                                   mainAxisAlignment:
@@ -187,15 +211,8 @@ class _ProductlistState extends State<Productlist> {
                                                 ),
                                               ),
                                             ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                'Rs.${productNotifier.productList[index].price.toString()}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .display1,
-                                              ),
-                                            ),
+
+
                                           ],
                                         ),
                                       ),

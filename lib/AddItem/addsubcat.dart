@@ -1,6 +1,6 @@
 
 import 'package:admin/database/subcatdatabse.dart';
-import 'package:admin/product/searchcat.dart';
+import 'package:admin/AddItem/searchcat.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
@@ -8,16 +8,17 @@ import 'package:admin/commanpages/loading.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/AddItem/productcollection.dart';
 
 
 class AddSubCat extends StatefulWidget {
   final String text;
+  final String text2;
 
-  AddSubCat({Key key,@required this.text}):super(key:key);
+  AddSubCat({Key key, @required this.text, @required this.text2} ):super(key:key);
 
   @override
-  _AddSubCatState createState() => _AddSubCatState(text: text);
+  _AddSubCatState createState() => _AddSubCatState(text: text,text2: text2);
 }
 
 
@@ -31,10 +32,12 @@ class _AddSubCatState extends State<AddSubCat> {
 
   String _currentCatergory;
   String subcatergorysearchkey='';
+  String catergorykey;
 
 
   final String text;
-  _AddSubCatState({Key key,@required this.text});
+  final String text2;
+  _AddSubCatState({Key key, @required this.text, @required this.text2});
 
 
   @override
@@ -158,6 +161,9 @@ class _AddSubCatState extends State<AddSubCat> {
                                                         onPressed: (){
                                                           setState(() {
                                                             _currentCatergory=text;
+                                                            catergorykey=text2;
+                                                            print(text);
+                                                            print(catergorykey);
                                                           });
                                                         },
                                                       ),
@@ -298,6 +304,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                             onChanged: (input) {
                                               setState(() {
                                                 subcatergorysearchkey = input;
+                                                catergorykey=text2;
                                               });
                                             },
                                             keyboardType: TextInputType.text,
@@ -325,7 +332,7 @@ class _AddSubCatState extends State<AddSubCat> {
                                           });
                                           if(_currentCatergory!=null){
                                           await _subcategoryService
-                                              .createSubCatData(subcatergory,_currentCatergory,subcatergorysearchkey);
+                                              .createSubCatData(subcatergory,_currentCatergory,subcatergorysearchkey,catergorykey);
 
                                           showDialog(
                                               context: context,

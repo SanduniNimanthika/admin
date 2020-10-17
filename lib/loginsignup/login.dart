@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:admin/services/authentication.dart';
 import 'package:admin/loginsignup/forgotpass.dart';
 import "package:admin/mainpages/home.dart";
-import "package:admin/loginsignup/signup.dart";
+
 import 'package:admin/commanpages/loading.dart';
 import 'package:admin/commanpages/configue.dart';
 class Signin extends StatefulWidget {
@@ -227,10 +227,8 @@ class _SigninState extends State<Signin> {
                                 child: Container(
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topLeft,
-                                      end: Alignment.bottomRight,
-                                      colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],),
+                                    color:Color(0xFF185a9d) ,
+
                                     borderRadius: BorderRadius.circular(20.0),
                                   ),
                                   child: Center(

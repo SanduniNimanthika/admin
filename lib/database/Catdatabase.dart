@@ -1,4 +1,4 @@
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/module/catergory.dart';
 import 'package:admin/StoreDisplay/editcatergory.dart';

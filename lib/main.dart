@@ -5,9 +5,10 @@ import 'package:admin/commanpages/textstyle.dart';
 import 'package:admin/mainpages/splash.dart';
 import 'package:admin/services/authentication.dart';
 import 'package:provider/provider.dart';
-import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/notifer/subcatergorynotifier.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
+import 'package:admin/notifer/oderhistorynotifer.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -25,6 +26,9 @@ class MyApp extends StatelessWidget {
                   ),
                   ChangeNotifierProvider(
                     create: (context) => SubCatergoryNotifier(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => ProductOrderHistoryNotifier(),
                   ),
 
             ChangeNotifierProvider(

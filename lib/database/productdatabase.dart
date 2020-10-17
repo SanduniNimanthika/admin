@@ -1,6 +1,6 @@
 import 'package:admin/module/product.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:path/path.dart' as path;
@@ -28,7 +28,11 @@ class ProductService {
       double price,
       String images,
       String description,
-      String productsearchkey) async {
+      String productsearchkey,
+      double offer,
+      double offerprice,
+      String catergorykey,
+      String subcatergorykey) async {
     String id = productCollection.document().documentID;
     return await productCollection.document(id).setData({
       'uid': id,
@@ -41,6 +45,10 @@ class ProductService {
       'images': images,
       'description': description,
       ' productsearchkey': productsearchkey,
+      'offer':offer,
+      'offerprice':offerprice,
+      'catergorykey':catergorykey,
+      'subcatergorykey':subcatergorykey,
     });
   }
 }
@@ -48,7 +56,7 @@ class ProductService {
 getProducts(ProductNotifier productNotifier) async {
   QuerySnapshot snapshot = await Firestore.instance
       .collection('Product')
-      .orderBy("productname", descending: true)
+      .orderBy("productname", descending: false)
       .getDocuments();
 
   List<Product> _productList = [];
@@ -60,6 +68,25 @@ getProducts(ProductNotifier productNotifier) async {
 
   productNotifier.productList = _productList;
 }
+
+
+getProductsOffer(ProductNotifier productNotifier) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('Product').where('offer',isGreaterThan: 0.0)
+
+      .getDocuments();
+
+  List<Product> _productList = [];
+
+  snapshot.documents.forEach((document) {
+    Product product = Product.fromMap(document.data);
+    _productList.add(product);
+  });
+
+  productNotifier.productList = _productList;
+}
+
+
 
 uploadProductAndImage(Product product /*,bool isUpdating*/, File localFile,
     Function productUploaded) async {

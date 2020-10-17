@@ -1,6 +1,6 @@
 import 'package:admin/module/subcar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
+import 'package:admin/notifer/subcatergorynotifier.dart';
 
 class SubCatergoryService {
   final String uid;
@@ -14,13 +14,14 @@ class SubCatergoryService {
       Firestore.instance.collection('SubCatergory');
 
   Future createSubCatData(String subcatergory, String catergory,
-      String subcatergorysearchkey) async {
+      String subcatergorysearchkey,String catergorykey) async {
     String id = subcatergoryCollection.document().documentID;
     return await subcatergoryCollection.document(id).setData({
       'uid': id,
       'subcatergory': subcatergory,
       'catergory': catergory,
-      'subcatergorysearchkey': subcatergorysearchkey
+      'subcatergorysearchkey': subcatergorysearchkey,
+      'catergorykey':catergorykey
     });
   }
 

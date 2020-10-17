@@ -1,7 +1,7 @@
-import 'package:admin/product/addsubcat.dart';
+import 'package:admin/AddItem/addsubcat.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/product/serachbar.dart';
+import 'package:admin/AddItem/serachbar.dart';
 
 
 class SearchCatergory extends StatefulWidget {
@@ -81,7 +81,7 @@ class _SearchCatergoryState extends State<SearchCatergory> {
                 children: tempSearchStore.map((element) {
                   return InkWell(
                     onTap: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSubCat(text:element['catergory'])));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>AddSubCat(text:element['catergory'],text2:element['uid'])));
                     },
                     child:Padding(
                       padding: const EdgeInsets.only(top:15.0,left: 15.0,right: 15.0,bottom: 6),

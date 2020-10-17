@@ -484,14 +484,8 @@ class _SignupState extends State<Signup> {
                                         child: Container(
                                           height: 40,
                                           decoration: BoxDecoration(
-                                            gradient: LinearGradient(
-                                              begin: Alignment.topLeft,
-                                              end: Alignment.bottomRight,
-                                              colors: [
-                                                const Color(0xFF185a9d),
-                                                const Color(0xFF43cea2)
-                                              ],
-                                            ),
+                                            color: Color(0xFF185a9d),
+
                                             borderRadius:
                                                 BorderRadius.circular(20.0),
                                           ),

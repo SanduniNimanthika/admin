@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/StoreDisplay/productlist.dart';
 import 'package:admin/module/catergory.dart';
 import 'package:admin/database/Catdatabase.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/AddItem/productcollection.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -12,12 +12,12 @@ import 'package:admin/commanpages/configue.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/database/subcatdatabse.dart';
-import 'package:admin/StoreDisplay/subcatergorynotifier.dart';
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/notifer/subcatergorynotifier.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/database/productdatabase.dart';
 import 'package:admin/StoreDisplay/productdisplay.dart';
-import 'package:admin/StoreDisplay/editcatergory.dart';
+
 
 
 class SubCatergorylist extends StatefulWidget {
@@ -47,15 +47,6 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
         Provider.of<SubCatergoryNotifier>(context);
     ProductNotifier productNotifier = Provider.of<ProductNotifier>(context);
 
-    _onCatergoryDeleted(Catergory catergory) {
-      Navigator.pop(context);
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ProductCollection()));
-
-      catergoryNotifier.deleteCatergory(catergory);
-    }
 
     return SafeArea(
       child: Scaffold(
@@ -145,24 +136,29 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                 ],
               )),
         ),
-        body: ListView.builder(
+        body: GridView.builder(
             shrinkWrap: true,
+            //  physics: ScrollPhysics(),
+            gridDelegate:
+            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio:
+            MediaQuery.of(context).size.width /
+                MediaQuery.of(context).size.height/0.85),
             itemCount: productNotifier.productList.length,
             itemBuilder: (BuildContext context, int index) {
               return (catergoryNotifier.currentCatergory.catergory ==
                       productNotifier.productList[index].catergory)
-                  ? Padding(
-                      padding:
-                          EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
-                      child: InkWell(
-                        onTap: () {
-                          productNotifier.currentProduct =
-                              productNotifier.productList[index];
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (BuildContext context) {
-                            return ProductDisplay();
-                          }));
-                        },
+                  ? InkWell(
+                    onTap: () {
+                      productNotifier.currentProduct =
+                          productNotifier.productList[index];
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (BuildContext context) {
+                        return ProductDisplay();
+                      }));
+                    },
+                    child: Padding(
+                        padding:
+                        EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
                         child: Material(
                           borderRadius: BorderRadius.only(
                               topLeft: Radius.circular(25.0),
@@ -171,7 +167,7 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                           shadowColor: Colors.greenAccent,
                           child: Container(
                               height:
-                                  MediaQuery.of(context).size.height / 9 * 2,
+                              MediaQuery.of(context).size.height / 9 * 2,
                               decoration: BoxDecoration(
                                   shape: BoxShape.rectangle,
                                   borderRadius: BorderRadius.only(
@@ -179,71 +175,97 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                       bottomRight: Radius.circular(25.0))),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Row(
+                                child: Column(
                                   children: <Widget>[
                                     Expanded(
-                                        flex: 2,
-                                        child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft:
-                                                        Radius.circular(25.0),
-                                                    bottomRight:
-                                                        Radius.circular(25.0))),
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width /
-                                                3,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height /
-                                                5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.rectangle,
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  25.0),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  25.0)),
-                                                  image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          productNotifier
-                                                              .productList[
-                                                                  index]
-                                                              .images),
-                                                      fit: BoxFit.fill)),
-                                            ))),
-                                    Expanded(
                                       flex: 4,
+                                      child: Container(
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft:
+                                                  Radius.circular(25.0),
+                                                  bottomRight:
+                                                  Radius.circular(25.0))),
+                                          width: MediaQuery.of(context)
+                                              .size
+                                              .width /
+                                              3,
+                                          height: MediaQuery.of(context)
+                                              .size
+                                              .height /
+                                              5,
+                                          child: Stack(
+                                            children: <Widget>[
+
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.rectangle,
+                                                    borderRadius: BorderRadius.only(
+                                                        topLeft:
+                                                        Radius.circular(25.0),
+                                                        bottomRight:
+                                                        Radius.circular(25.0)),
+                                                    image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            productNotifier
+                                                                .productList[index]
+                                                                .images),
+                                                        fit: BoxFit.fill)),
+                                              ),
+                                              Align(
+                                                  alignment: Alignment.bottomRight,
+                                                  child:(productNotifier.productList[index].offer!=0) ?Container(
+                                                    height: 37,
+                                                    width: 57.0,
+                                                    decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      shape: BoxShape.rectangle,
+                                                      borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(25.0),
+                                                          bottomRight: Radius.circular(25.0)),
+                                                    ),
+                                                    child: Center(
+                                                      child: Text( '${productNotifier.productList[index].offer.toString()}%',
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .subhead
+
+                                                      ),
+                                                    ),
+                                                  ):Container()
+                                              )
+                                            ],
+                                          )),
+                                    ),
+                                    Expanded(
+                                      flex:3 ,
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                            left: 8.0, right: 8.0),
+                                            left: 8.0, right: 8.0,top: 8.0),
                                         child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                           mainAxisAlignment:
-                                              MainAxisAlignment.center,
+                                          MainAxisAlignment.center,
                                           children: <Widget>[
                                             Expanded(
                                               flex: 2,
                                               child: Text(
-                                                productNotifier.productList[index]
+                                                productNotifier
+                                                    .productList[index]
                                                     .productname,
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .subhead
                                                     .copyWith(
-                                                        color: Color(0xFF185a9d),
-                                                        fontSize: 20.0),
+                                                    color:
+                                                    Color(0xFF185a9d),
+                                                    fontSize: 18.0),
                                               ),
                                             ),
                                             Expanded(
-                                              flex: 2,
+                                              flex: 1,
                                               child: Container(
                                                 child: Row(
                                                   mainAxisAlignment:
@@ -269,43 +291,22 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                                                 ),
                                               ),
                                             ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Text(
-                                                'Rs.${productNotifier
-                                                    .productList[index]
-                                                    .price
-                                                    .toString()}',
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .display1,
-                                              ),
-                                            ),
+
+
                                           ],
                                         ),
                                       ),
                                     ),
-
                                   ],
                                 ),
                               )),
-                        ),
-                      ))
+                        )),
+                  )
                   : Container();
             }),
 
         floatingActionButton: Floting()
-      /*  floatingActionButton: FloatingActionButton(
-          backgroundColor: Colors.red,
-          onPressed: () {
-            deleteCatergory(
-                catergoryNotifier.currentCatergory, _onCatergoryDeleted);
-          },
-          child: Icon(
-            Icons.delete,
-            color: Colors.white,
-          ),
-        ),*/
+
       ),
     );
   }

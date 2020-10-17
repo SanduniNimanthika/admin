@@ -1,7 +1,7 @@
 import 'dart:ui';
 import 'package:admin/profile/Editprofile.dart';
 import 'package:admin/module/staff.dart';
-import 'package:admin/services/usermanagment.dart';
+import 'package:admin/profile/setting&privacy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -141,8 +141,10 @@ class _MyaccountState extends State<Myaccount> {
                                       child: InkWell(
                                         borderRadius: BorderRadius.circular(20.0),
                                         onTap: () {
-                                          UserManagment()
-                                              .authorizedAccess(context);
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                              builder: (context) => Setting()));
                                         },
                                         child: Container(
                                           height: 40.0,

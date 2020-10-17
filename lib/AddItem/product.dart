@@ -1,15 +1,15 @@
 import 'package:admin/Dashborad/Admindashbord.dart';
-import 'package:admin/product/addcat.dart';
-import 'package:admin/product/addsubcat.dart';
+import 'package:admin/AddItem/addcat.dart';
+import 'package:admin/AddItem/addsubcat.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/product/addproduct.dart';
+import 'package:admin/AddItem/addproduct.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:admin/commanpages/configue.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
-import 'package:admin/StoreDisplay/catergorynotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
+import 'package:admin/notifer/catergorynotifer.dart';
 
 class Item extends StatefulWidget {
   @override

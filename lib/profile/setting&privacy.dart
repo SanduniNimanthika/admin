@@ -1,3 +1,4 @@
+import 'package:admin/loginsignup/forgotpass.dart';
 import 'package:admin/profile/proflie.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/material.dart';
@@ -57,6 +58,12 @@ class _SettingState extends State<Setting> {
               ),
               Divider(),
               InkWell(
+                onTap: (){
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                      builder: (context) => Forgotpass()));
+                },
                 child: ListTile(
                   leading: Icon(Icons.vpn_key),
                   title: Text(

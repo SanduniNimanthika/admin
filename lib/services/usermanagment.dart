@@ -1,15 +1,15 @@
 import 'package:admin/Dashborad/staffdashbord.dart';
 import 'package:admin/StoreDisplay/editcatergory.dart';
 import 'package:admin/StoreDisplay/editsubcatergory.dart';
-import 'package:admin/StoreDisplay/productlist.dart';
+
 import 'package:admin/StoreDisplay/store.dart';
-import 'package:admin/product/productcollection.dart';
+import 'package:admin/AddItem/productcollection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:admin/Dashborad/Admindashbord.dart';
-import 'package:admin/StoreDisplay/subcatergorylist.dart';
+
 import 'package:admin/StoreDisplay/editproduct.dart';
 
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:admin/product/product.dart' as firstpage;
+import 'package:admin/AddItem/product.dart' as firstpage;
 import 'package:admin/StoreDisplay/store.dart'as secondpage;
 class ProductCollection extends StatefulWidget {
   @override

@@ -9,10 +9,10 @@ import 'package:admin/database/staffdatabase.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/mainpages/home.dart';
-import 'package:admin/loginsignup/signup.dart';
+
 import 'package:admin/commanpages/loading.dart';
-import 'package:admin/product/productcollection.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/order/odertab.dart';
+import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/profile/setting&privacy.dart';
 class StaffPanel extends StatefulWidget {
   @override
@@ -97,7 +97,11 @@ class _StaffPanelState extends State<StaffPanel> {
                         child: Column(
                           children: <Widget>[
                             InkWell(
-                                onTap: (){},
+                                onTap: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => OrderTab()));
+                                },
                                 child: dashbord(context,"Order","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
                             ),
 

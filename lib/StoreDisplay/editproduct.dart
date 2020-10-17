@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:admin/commanpages/configue.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/notifer/productnotifer.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:admin/StoreDisplay/searcheditsubcatergory.dart';
@@ -16,18 +16,22 @@ import 'dart:io';
 class Editproduct extends StatefulWidget {
   final bool isUpdating;
   final String text;
+  final String catkey;
+  final String subcatkey;
   final String text2;
 
   Editproduct(
       {Key key,
       @required this.text,
       @required this.text2,
-      @required this.isUpdating})
+      @required this.isUpdating,@required this.catkey,@required this.subcatkey})
       : super(key: key);
   @override
   _EditproductState createState() => _EditproductState(
         text: text,
         text2: text2,
+    catkey: catkey,
+    subcatkey: subcatkey
       );
 }
 
@@ -42,14 +46,17 @@ class _EditproductState extends State<Editproduct> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final String text;
-  final bool isUpdating;
+  final String subcatkey;
   final String text2;
+  final bool isUpdating;
+  final String catkey;
 
   _EditproductState(
       {Key key,
       @required this.text,
       @required this.text2,
-      @required this.isUpdating});
+      @required this.isUpdating,
+        @required this.catkey,@required this.subcatkey});
   @override
   void initState() {
     super.initState();
@@ -206,6 +213,8 @@ class _EditproductState extends State<Editproduct> {
                                                           _currentProduct
                                                                   .subcatergory =
                                                               text2;
+                                                          _currentProduct.catergorykey=catkey;
+                                                          _currentProduct.subcatergorykey=subcatkey;
                                                         });
                                                       },
                                                     ),
@@ -302,6 +311,7 @@ class _EditproductState extends State<Editproduct> {
                                   ),
                                 ),
                               ),
+
                               Opacity(
                                 opacity: 0.8,
                                 child: Container(
@@ -492,6 +502,57 @@ class _EditproductState extends State<Editproduct> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: EdgeInsets.only(
+
+                                    bottom: 6 * SizeConfig.heightMultiplier),
+                                child: Opacity(
+                                  opacity: 0.8,
+                                  child: Container(
+                                    child: new Center(
+                                        child: new TextFormField(
+                                            initialValue: _currentProduct.offer.toString()
+                                                ,
+                                            decoration: new InputDecoration(
+                                              labelText: "Product Offer",
+                                              prefixIcon: Icon(Icons.add,
+                                                  color: Colors.blueGrey),
+                                              labelStyle: Theme.of(context)
+                                                  .textTheme
+                                                  .display1,
+                                              fillColor: Colors.white,
+                                              filled: true,
+                                              focusedBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Color(0xFF185a9d),
+                                                    style: BorderStyle.solid,
+                                                    width: 1),
+                                              ),
+                                              enabledBorder: OutlineInputBorder(
+                                                borderSide: BorderSide(
+                                                    color: Color(0xFF185a9d),
+                                                    style: BorderStyle.solid,
+                                                    width: 1),
+                                              ),
+                                            ),
+
+                                            onChanged: (input) {
+                                              setState(() {
+                                                String quntitys = input;
+                                                _currentProduct.offer =
+                                                    double.parse(quntitys);
+
+
+                                              });
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .display1)),
+                                  ),
+                                ),
+                              ),
+
                               Row(
                                 children: <Widget>[
                                   Expanded(
@@ -543,7 +604,10 @@ class _EditproductState extends State<Editproduct> {
                                   elevation: 4.0,
                                   child: InkWell(
                                     onTap: () async {
+                                      print(_currentProduct.price);
+                                      _currentProduct.offerprice=(_currentProduct.price-(_currentProduct.price*_currentProduct.offer/100));
                                       saveEdit();
+
                                     },
                                     child: Container(
                                       height: 40,
@@ -707,7 +771,7 @@ class _EditproductState extends State<Editproduct> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => SubCatergorylist()));
+                                  builder: (context) => ProductDisplay()));
 
                         },
                         child: Container(

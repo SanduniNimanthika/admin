@@ -1,7 +1,7 @@
 import 'package:admin/StoreDisplay/editsubcatergory.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:admin/product/serachbar.dart';
+import 'package:admin/AddItem/serachbar.dart';
 
 class SearchEditCatergory extends StatefulWidget {
   @override
@@ -88,7 +88,7 @@ class _SearchEditCatergoryState extends State<SearchEditCatergory> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                EditSubCatergory(text: element['catergory'])));
+                                EditSubCatergory(text: element['catergory'],text2: element['uid'],)));
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(

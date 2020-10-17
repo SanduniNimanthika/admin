@@ -1,4 +1,5 @@
 import 'package:admin/profile/proflie.dart';
+import 'package:admin/profile/setting&privacy.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/module/staff.dart';
@@ -10,8 +11,8 @@ import 'package:provider/provider.dart';
 import 'package:admin/mainpages/home.dart';
 import 'package:admin/loginsignup/signup.dart';
 import 'package:admin/commanpages/loading.dart';
-import 'package:admin/product/productcollection.dart';
-import 'package:admin/StoreDisplay/productnotifer.dart';
+import 'package:admin/AddItem/productcollection.dart';
+import 'package:admin/notifer/productnotifer.dart';
 
 class AdminPanel extends StatefulWidget {
   @override
@@ -161,7 +162,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => Myaccount()),
+                                                  builder: (context) => Setting()),
                                             );
                                           },
                                           child:Material(
@@ -181,7 +182,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                                   children: <Widget>[
                                                     Expanded(
                                                         flex: 3,
-                                                        child: Text("My Account",style: Theme.of(context).textTheme.display1.copyWith(fontSize: 23,color: Color(0xFF185a9d)))),
+                                                        child: Text("Settings",style: Theme.of(context).textTheme.display1.copyWith(fontSize: 23,color: Color(0xFF185a9d)))),
                                                     Expanded(
                                                         flex: 6,
                                                         child: Image(image:AssetImage("images/dashbord/person-icon-blue-9.png"),)),
@@ -210,7 +211,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                                         Homepage()));
 
                                           },
-                                          child: dashbord(context,"Security","images/dashbord/secu.png",'255',MediaQuery.of(context).size.width,)
+                                          child: dashbord(context,"Logout","images/dashbord/secu.png",'',MediaQuery.of(context).size.width,)
                                       ),
                                     ),
                                   ),
