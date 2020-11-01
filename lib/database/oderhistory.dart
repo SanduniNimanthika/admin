@@ -24,7 +24,24 @@ getProductOrderHistory(ProductOrderHistoryNotifier productOrderHistoryNotifier) 
   productOrderHistoryNotifier.productOrderHistoryList = _productOrderHistoryList;
 }
 
+getProductOrderHistorys(ProductOrderHistoryNotifier productOrderHistoryNotifier,String useruid) async {
 
+
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('SuccessFullOrders')
+      .where('userkey',isEqualTo:useruid )
+      .orderBy("productname", descending: true)
+      .getDocuments();
+
+  List<ProductOrderHistory> _productOrderHistoryList = [];
+
+  snapshot.documents.forEach((document) {
+    ProductOrderHistory productOrderHistory = ProductOrderHistory.fromMap(document.data);
+    _productOrderHistoryList.add(productOrderHistory);
+  });
+
+  productOrderHistoryNotifier.productOrderHistoryList = _productOrderHistoryList;
+}
 
 
 uploadOrderHistory(ProductOrderHistory productOrderHistory,Function orderHistoryUploaded)async{

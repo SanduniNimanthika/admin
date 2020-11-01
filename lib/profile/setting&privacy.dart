@@ -59,10 +59,10 @@ class _SettingState extends State<Setting> {
               Divider(),
               InkWell(
                 onTap: (){
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                      builder: (context) => Forgotpass()));
+                 // Navigator.push(
+                   //   context,
+                   //   MaterialPageRoute(
+                   //   builder: (context) => Forgotpass()));
                 },
                 child: ListTile(
                   leading: Icon(Icons.vpn_key),

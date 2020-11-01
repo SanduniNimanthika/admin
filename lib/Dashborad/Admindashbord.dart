@@ -1,3 +1,5 @@
+import 'package:admin/StaffDetails/searchstaff.dart';
+import 'package:admin/order/odertab.dart';
 import 'package:admin/profile/proflie.dart';
 import 'package:admin/profile/setting&privacy.dart';
 import 'package:flutter/cupertino.dart';
@@ -123,7 +125,7 @@ class _AdminPanelState extends State<AdminPanel> {
                                           onTap: (){
                                             Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => Signup()));
+                                                MaterialPageRoute(builder: (context) => StaffSearch()));
                                           },
                                           child: dashbord(context,"Staff","images/dashbord/committees.png",'255',MediaQuery.of(context).size.width,)
                                       ),
@@ -134,7 +136,11 @@ class _AdminPanelState extends State<AdminPanel> {
                                     child: Padding(
                                       padding: EdgeInsets.only(left:2*SizeConfig.heightMultiplier),
                                       child: InkWell(
-                                          onTap: (){},
+                                          onTap: (){
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => StaffSearch(search:'customer')));
+                                          },
                                           child: dashbord(context,"Customers","images/dashbord/family1.png",'255',MediaQuery.of(context).size.width,)
                                       ),
                                     ),
@@ -144,7 +150,12 @@ class _AdminPanelState extends State<AdminPanel> {
                             ),
                                                     //order
                             InkWell(
-                                onTap: (){},
+                                onTap: (){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                      builder: (context) => OrderTab()));
+                                },
                                 child: dashbord(context,"Order","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
                             ),
                             Padding(

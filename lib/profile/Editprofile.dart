@@ -15,7 +15,7 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-  @override
+
   final DatabaseService databaseService = DatabaseService();
   final _formKey = GlobalKey<FormState>();
 
@@ -23,6 +23,7 @@ class _EditProfileState extends State<EditProfile> {
 
   String _currenttelenumber;
   String _currentaddress;
+  @override
   Widget build(BuildContext context) {
     final staff = Provider.of<Staff>(context, listen: false);
     return StreamBuilder<Staff>(

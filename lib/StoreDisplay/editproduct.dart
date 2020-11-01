@@ -517,6 +517,10 @@ class _EditproductState extends State<Editproduct> {
                                               labelText: "Product Offer",
                                               prefixIcon: Icon(Icons.add,
                                                   color: Colors.blueGrey),
+                                              suffixStyle:  Theme.of(context)
+                                                  .textTheme
+                                                  .display1,
+                                              suffixText: "%",
                                               labelStyle: Theme.of(context)
                                                   .textTheme
                                                   .display1,

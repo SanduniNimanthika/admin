@@ -591,6 +591,10 @@ String subcatergorykey;
                                           child: new TextFormField(
                                               decoration: new InputDecoration(
                                                 labelText: "Product Offer",
+                                                suffixText: "%",suffixStyle:  Theme
+                                                  .of(context)
+                                                  .textTheme
+                                                  .display1,
                                                 prefixIcon: Icon(Icons.add,
                                                     color: Colors.blueGrey),
                                                 labelStyle: Theme

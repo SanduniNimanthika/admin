@@ -1,7 +1,7 @@
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/order/productorder.dart' as firstpage;
-import 'package:admin/StoreDisplay/store.dart'as secondpage;
+import 'package:admin/order/perscriptionhistory.dart'as secondpage;
 class OrderTab extends StatefulWidget {
   @override
   _OrderTabState createState() => _OrderTabState();
@@ -84,7 +84,7 @@ class _OrderTabState extends State<OrderTab>with SingleTickerProviderStateMixin{
             controller: controller,
             children: <Widget>[
               new firstpage.ProductOrder(),
-              new secondpage.Store(),
+              new secondpage.PerscriptionHistory(),
             ],
           ),
         ),

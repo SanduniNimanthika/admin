@@ -191,7 +191,7 @@ class _SigninState extends State<Signin> {
                             alignment: Alignment.centerRight,
                             child: GestureDetector(
                               onTap: (){
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Forgotpass()));
+                              //  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Forgotpass()));
                               },
                               child: Text("Forgot password?",
                                   style:Theme.of(context).textTheme.subhead.copyWith(color:Color(0xFF185a9d),fontWeight: FontWeight.bold )),

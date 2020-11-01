@@ -42,7 +42,9 @@ Future profileupdate(
     });
 }
 
-
+  Future deleteuser() {
+    return staffCollection.document(uid).delete();
+  }
 
 
   //staff profile data from snapshot
@@ -67,6 +69,13 @@ Future profileupdate(
     return staffCollection.document(this.uid).snapshots()
         .map(_staffProfileDataFromSnapshot);
   }
+
+  Future <List<DocumentSnapshot>>getSuggestions(String suggestion)=>
+    staffCollection.where('email',isGreaterThanOrEqualTo: suggestion).getDocuments().then((snap){
+      return snap.documents;
+    });
+
+
 }
 
 

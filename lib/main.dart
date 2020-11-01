@@ -1,4 +1,5 @@
 import 'package:admin/module/staff.dart';
+import 'package:admin/notifer/perscriptionnotifer.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/commanpages/configue.dart';
 import 'package:admin/commanpages/textstyle.dart';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
                   ),
                   ChangeNotifierProvider(
                     create: (context) => ProductOrderHistoryNotifier(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => PerscriptionOrderHistoryNotifier(),
                   ),
 
             ChangeNotifierProvider(
