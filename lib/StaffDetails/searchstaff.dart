@@ -1,4 +1,6 @@
+import 'package:admin/Dashborad/Admindashbord.dart';
 import 'package:admin/StaffDetails/staffDetail.dart';
+import 'package:admin/loginsignup/signup.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:flutter/material.dart';
@@ -47,7 +49,9 @@ class _StaffSearchState extends State<StaffSearch> {
                             color: Colors.white,
                           ),
                           onPressed: () {
-                            UserManagment().authorizedAccess(context);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AdminPanel()
+                            ));
                           },
                         ),
                       ),
@@ -81,7 +85,7 @@ class _StaffSearchState extends State<StaffSearch> {
                                         color: Colors.white, width: 1.5)),
                               )),
                           suggestionsCallback: (pattern) async {
-                            return(search==null)? await databaseService
+                            return(search=='staff')? await databaseService
                                 .getSuggestions(pattern):await databaseServiceUser.getSuggestions(pattern);
                           },
                           itemBuilder: (context, suggestion) {
@@ -103,7 +107,7 @@ class _StaffSearchState extends State<StaffSearch> {
 
                           },
                           onSuggestionSelected: (suggestion) {
-                            (search==null)?  Navigator.of(context).push(MaterialPageRoute(
+                            (search=='staff')?  Navigator.of(context).push(MaterialPageRoute(
                                  builder: (context) => StaffDetail(staffuid:suggestion['uid'])
                              )):Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) => UserDetail(useruid:suggestion['uid'])));

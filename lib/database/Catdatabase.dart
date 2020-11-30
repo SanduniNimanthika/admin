@@ -1,7 +1,7 @@
 import 'package:admin/notifer/catergorynotifer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/module/catergory.dart';
-import 'package:admin/StoreDisplay/editcatergory.dart';
+
 
 class CatergoryService {
   final String uid;
@@ -16,12 +16,17 @@ class CatergoryService {
 
 
    //setdata
-  Future createCatData(String catergory,String catergorysearchkey) async {
+  Future createCatData(String catergory,) async {
     String id = catergoryCollection.document().documentID;
     return await catergoryCollection
         .document(id)
-        .setData({'uid': id, 'catergory': catergory,'catergorysearchkey':catergorysearchkey});
+        .setData({'uid': id, 'catergory': catergory,});
   }
+
+  Future <List<DocumentSnapshot>>getSuggestions(String suggestion)=>
+      catergoryCollection.where('catergory',isGreaterThanOrEqualTo: suggestion).getDocuments().then((snap){
+        return snap.documents;
+      });
 
 }
 

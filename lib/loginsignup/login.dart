@@ -1,3 +1,4 @@
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -55,11 +56,7 @@ class _SigninState extends State<Signin> {
                     height: MediaQuery.of(context).size.height,
                     width: MediaQuery.of(context).size.width,
                     decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],),
-
+                      gradient: linearcolor()
                     ),
 
                   ),
@@ -87,29 +84,8 @@ class _SigninState extends State<Signin> {
                             child: Container(
                               child: new Center(
                                   child: new TextFormField(
-                                      decoration: new InputDecoration(
-                                        labelText: "Email",
-                                        prefixIcon: Icon(Icons.email,color:Colors.blueGrey),
-                                        labelStyle:Theme.of(context).textTheme.display1,
-                                        fillColor: Colors.white,
-                                        filled: true,
-                                        focusedBorder:OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color:Color(0xFF185a9d),
-                                              style: BorderStyle.solid,
-                                              width: 1
-                                          ),
-                                          borderRadius: new BorderRadius.circular(22.0),
-                                        ),
-                                        enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(
-                                              color:Color(0xFF185a9d),
-                                              style: BorderStyle.solid,
-                                              width: 1
-                                          ),
-                                          borderRadius: new BorderRadius.circular(22.0),
-                                        ),
-                                      ),
+                                      decoration:inputDecaration(context, "Email", Icons.email),
+
                                       validator: (input)=>input.isEmpty?'Please type your email here':null,
                                       onChanged: (input){
                                         setState(() {
@@ -158,7 +134,7 @@ class _SigninState extends State<Signin> {
                                             style: BorderStyle.solid,
                                             width: 1
                                         ),
-                                        borderRadius: new BorderRadius.circular(22.0),
+
                                       ),
                                       enabledBorder: OutlineInputBorder(
                                         borderSide: BorderSide(
@@ -166,12 +142,12 @@ class _SigninState extends State<Signin> {
                                             style: BorderStyle.solid,
                                             width: 1
                                         ),
-                                        borderRadius: new BorderRadius.circular(22.0),
+
                                       ),
                                     ),
 
 
-                                    validator: (input)=>input.length<6?'Your password needs to be at least 6 characters':null,
+                                    validator: (input)=>input.isEmpty?'Please enter your password':null,
                                     onChanged: (input){
                                       setState(() {
                                         password=input;
@@ -210,17 +186,21 @@ class _SigninState extends State<Signin> {
                                       loading=true;
                                     });
                                     dynamic result =await _auth.signInWithEmailAndPassword(email, password,context);
-                                    UserManagment().authorizedAccess(context);
+
 
                                     if (result==null){
                                       setState(() {
                                         loading=false;}
                                       );
 
+
                                     } if (loading==false){
                                       setState(() {
                                         error='Please check your email and password';
                                       });
+                                    }
+                                    if(result!=null){
+                                      UserManagment().authorizedAccess(context);
                                     }
                                   }
                                 },

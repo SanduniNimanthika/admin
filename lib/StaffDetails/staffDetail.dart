@@ -6,8 +6,7 @@ import 'package:admin/module/staff.dart';
 import 'package:admin/commanpages/configue.dart';
 import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/services/usermanagment.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class StaffDetail extends StatefulWidget {
   final String staffuid;
@@ -71,14 +70,7 @@ class _StaffDetailState extends State<StaffDetail> {
                                         width:
                                             MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              const Color(0xFF185a9d),
-                                              const Color(0xFF43cea2)
-                                            ],
-                                          ),
+                                          gradient:linearcolor()
                                         ),
                                         child: Center(
                                           child: Container(
@@ -373,7 +365,7 @@ class _EditProfileRoleState extends State<EditProfileRole> {
   String _currentrole = '';
   @override
   Widget build(BuildContext context) {
-    final staff = Provider.of<Staff>(context, listen: false);
+
     return StreamBuilder<Staff>(
         stream: DatabaseService(uid: staffuid).profileData,
         builder: (context, snapshot) {

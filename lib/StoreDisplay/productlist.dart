@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:admin/StoreDisplay/productdisplay.dart';
 import 'package:admin/StoreDisplay/subcatergorylist.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/module/subcar.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
@@ -51,16 +52,10 @@ class _ProductlistState extends State<Productlist> {
       appBar: _customAppBar(
           _key,
           context,
-          subcatergoryNotifier.currentSubCatergory.subcatergory != null
-              ? subcatergoryNotifier.currentSubCatergory.subcatergory
-              : null),
-      body: GridView.builder(
+           subcatergoryNotifier.currentSubCatergory.subcatergory,subcatergoryNotifier.currentSubCatergory.catergorykey
+             ),
+      body: ListView.builder(
           shrinkWrap: true,
-        //  physics: ScrollPhysics(),
-          gridDelegate:
-          SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio:
-          MediaQuery.of(context).size.width /
-              MediaQuery.of(context).size.height/0.85),
           itemCount: productNotifier.productList.length,
           itemBuilder: (BuildContext context, int index) {
             return (catergoryNotifier.currentCatergory.catergory ==
@@ -73,7 +68,7 @@ class _ProductlistState extends State<Productlist> {
                           productNotifier.productList[index];
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
-                        return ProductDisplay();
+                        return ProductDisplay(back: 'page',);
                       }));
                     },
                     child: Padding(
@@ -88,25 +83,15 @@ class _ProductlistState extends State<Productlist> {
                           child: Container(
                               height:
                                   MediaQuery.of(context).size.height / 9 * 2,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25.0),
-                                      bottomRight: Radius.circular(25.0))),
+                              decoration:boxDecarationhistory(),
                               child: Padding(
                                 padding: const EdgeInsets.all(10.0),
-                                child: Column(
+                                child: Row(
                                   children: <Widget>[
                                     Expanded(
-                                      flex: 4,
+                                      flex: 2,
                                       child: Container(
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.rectangle,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                      Radius.circular(25.0),
-                                                  bottomRight:
-                                                      Radius.circular(25.0))),
+                                          decoration: boxDecarationhistory(),
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width /
@@ -170,7 +155,7 @@ class _ProductlistState extends State<Productlist> {
                                               MainAxisAlignment.center,
                                           children: <Widget>[
                                             Expanded(
-                                              flex: 2,
+                                              flex: 3,
                                               child: Text(
                                                 productNotifier
                                                     .productList[index]
@@ -181,7 +166,23 @@ class _ProductlistState extends State<Productlist> {
                                                     .copyWith(
                                                         color:
                                                             Color(0xFF185a9d),
-                                                        fontSize: 18.0),
+                                                        ),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 1,
+                                              child: Container(
+                                                child: Text(
+                                                  ' Rs: ${productNotifier
+                                                      .productList[index]
+                                                      .price
+                                                      .toString()}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .display1
+                                                      .copyWith(
+                                                      fontSize: 14),
+                                                ),
                                               ),
                                             ),
                                             Expanded(
@@ -194,7 +195,7 @@ class _ProductlistState extends State<Productlist> {
                                                     Text("In Stock :  ",
                                                         style: Theme.of(context)
                                                             .textTheme
-                                                            .display1),
+                                                            .display1.copyWith(fontSize: 14)),
                                                     Text(
                                                       productNotifier
                                                           .productList[index]
@@ -205,7 +206,7 @@ class _ProductlistState extends State<Productlist> {
                                                           .display1
                                                           .copyWith(
                                                               color:
-                                                                  Colors.red),
+                                                                  Colors.red,fontSize: 14),
                                                     ),
                                                   ],
                                                 ),
@@ -255,8 +256,82 @@ class Flotinng extends StatelessWidget {
           then((docs){
             if (docs.documents[0].exists) {
               if (docs.documents[0].data['role'] == 'admin'){
-                deleteSubCatergory(
-                    subcatergoryNotifier.currentSubCatergory, _onSubCatergoryDeleted);
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape:
+                        RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(
+                              20.0),
+                        ),
+                        child: Container(
+                          height: 300.0,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Icon(
+                                  Icons.warning,color: Colors.red,size: 30,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.all(
+                                    20.0),
+                                child: Text(
+                                  "After you delete an SubCatergory, it's permanently deleted and all the products within subcatergory also deleted. SubCatergories can't be undeleted.",
+                                  style: Theme.of(
+                                      context)
+                                      .textTheme
+                                      .display1.copyWith(color: Colors.red,),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.all(
+                                    30.0),
+                                child: Material(
+                                  borderRadius:
+                                  BorderRadius
+                                      .circular(
+                                      20.0),
+                                  elevation: 4.0,
+                                  child: InkWell(
+                                      borderRadius:
+                                      BorderRadius
+                                          .circular(
+                                          20.0),
+                                      onTap: () {
+                                        Firestore.instance
+                                            .collection('Product')
+                                            .where("subcatergorykey",
+                                            isEqualTo: subcatergoryNotifier.currentSubCatergory.subcatkey)
+                                            .getDocuments()
+                                            .then((querySnapshot) {
+
+                                          querySnapshot.documents
+                                              .forEach((result) {
+
+                                            result.reference.delete();
+
+                                          });
+                                        });
+                                        deleteSubCatergory(
+                                            subcatergoryNotifier.currentSubCatergory, _onSubCatergoryDeleted);
+                                      },
+                                      child:buttonContainer(context, 'okey', 40, 150)
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+
               }else {
                 showDialog(
                     context: context,
@@ -302,37 +377,8 @@ class Flotinng extends StatelessWidget {
                                     onTap: () {
                                       Navigator.pop(context);
                                     },
-                                    child:
-                                    Container(
-                                      height: 40.0,
-                                      width: 100.0,
-                                      decoration:
-                                      BoxDecoration(
-                                        gradient:
-                                        LinearGradient(
-                                          begin: Alignment
-                                              .topLeft,
-                                          end: Alignment
-                                              .bottomRight,
-                                          colors: [
-                                            const Color(
-                                                0xFF185a9d),
-                                            const Color(
-                                                0xFF43cea2)
-                                          ],
-                                        ),
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            20.0),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                            "okay",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subhead),
-                                      ),
-                                    ),
+                                    child:buttonContainer(context,'okey', 40, 100)
+
                                   ),
                                 ),
                               ),
@@ -358,7 +404,9 @@ class Flotinng extends StatelessWidget {
 }
 
 Widget _customAppBar(GlobalKey<ScaffoldState> globalKey, BuildContext context,
-    String subcatergoryname) {
+    String subcatergoryname,String catname) {
+  CatergoryNotifier catergoryNotifier =
+  Provider.of<CatergoryNotifier>(context);
   return PreferredSize(
     preferredSize: Size.fromHeight(12 * SizeConfig.heightMultiplier),
     child: Material(
@@ -366,11 +414,7 @@ Widget _customAppBar(GlobalKey<ScaffoldState> globalKey, BuildContext context,
       child: Container(
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-          ),
+          gradient: linearcolor()
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -383,17 +427,35 @@ Widget _customAppBar(GlobalKey<ScaffoldState> globalKey, BuildContext context,
                   right: 2.2 * SizeConfig.widthMultiplier),
               child: Row(
                 children: <Widget>[
+
                   Expanded(
                     flex: 1,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          return SubCatergorylist();
-                        }));
-                      },
-                      icon: Icon(Icons.arrow_back_ios, color: Colors.white),
-                    ),
+                    child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: catergoryNotifier.catergoryList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return (catname ==
+                              catergoryNotifier.catergoryList[index].catkey)
+                              ? Align(
+                            alignment: Alignment.centerLeft,
+                            child: IconButton(
+                              onPressed: () {
+                                catergoryNotifier.currentCatergory =
+                                catergoryNotifier.catergoryList[index];
+                                Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (BuildContext context) {
+                                      return SubCatergorylist();
+                                    }));
+                              },
+                              icon: Icon(
+                                Icons.arrow_back_ios,
+                                color: Colors.white,
+                              ),
+                            ),
+                          )
+                              : Container();
+                        }),
+
                   ),
                   Expanded(
                     flex: 5,

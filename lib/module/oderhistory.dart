@@ -13,6 +13,8 @@ class ProductOrderHistory {
   String address;
   String status;
   String productOrderHistorykey;
+  String date;
+  String hometown;
 
 
   ProductOrderHistory(
@@ -28,7 +30,8 @@ class ProductOrderHistory {
         this.telenumber,
         this.fullname,
         this.status,
-        this.productOrderHistorykey});
+        this.productOrderHistorykey,this.date,
+      this.hometown});
 
 
 
@@ -49,6 +52,8 @@ class ProductOrderHistory {
     address=data['address'];
     status=data['status'];
     productOrderHistorykey=data['productOrderHistorykey'];
+    date=data['date'];
+    hometown=data['hometown'];
 
   }
 
@@ -67,6 +72,8 @@ class ProductOrderHistory {
       'telenumber':telenumber,
       'status':status,
       'productOrderHistorykey':productOrderHistorykey,
+      'date':date,
+      'hometown':hometown,
 
     };
   }

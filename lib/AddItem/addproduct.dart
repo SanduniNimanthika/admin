@@ -1,5 +1,6 @@
 
-import 'package:admin/AddItem/searchsub.dart';
+import 'package:admin/AddItem/product.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -8,24 +9,28 @@ import 'package:admin/commanpages/configue.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'package:admin/AddItem/productcollection.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:admin/database/productdatabase.dart';
+import 'package:admin/StoreDisplay/productdisplay.dart';
+import 'package:admin/module/product.dart';
+import 'package:flutter/foundation.dart';
+import 'package:admin/notifer/productnotifer.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:admin/database/subcatdatabse.dart';
 
 
 
 class AddProduct extends StatefulWidget {
 
   final String text;
-  final String text2;
-  final String catkey;
-  final String subcatkey;
 
-  AddProduct({Key key,@required this.text,@required this.text2,@required this.catkey,@required this.subcatkey}):super(key:key);
+
+  AddProduct({Key key,@required this.text,}):super(key:key);
   @override
-  _AddProductState createState() => _AddProductState(text: text,text2: text2,catkey: catkey,subcatkey: subcatkey);
+  _AddProductState createState() => _AddProductState(text: text,);
 }
 
 
@@ -46,21 +51,44 @@ String subcatergorykey;
   String catergory;
   String description;
   double offerprice;
+  bool capsualtype=false;
+  double cardprice;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   ProductService _productService = ProductService();
   List<DocumentSnapshot> catergories = <DocumentSnapshot>[];
   File _image;
+  File _imageFile;
+  String _imageUrl;
 
   String productsearchkey;
 
   final String text;
-  final String text2;
-  final String catkey;
-  final String subcatkey;
 
-  _AddProductState( {Key key, @required this.text, @required this.text2,@required this.catkey,@required this.subcatkey} );
+  _AddProductState( {Key key, @required this.text, } );
+  SubCatergoryService _subcategoryService = SubCatergoryService();
+  Product _currentProduct;
+  @override
+  void initState() {
+    super.initState();
+    ProductNotifier productNotifier =
+    Provider.of<ProductNotifier>(context, listen: false);
+
+    if (productNotifier.currentProduct != null) {
+      _currentProduct = productNotifier.currentProduct;
+    } else {
+      _currentProduct = Product();
+    }
+    _imageUrl = _currentProduct.images;
+  }
+
+  _onProductUploaded(Product product) {
+    ProductNotifier productNotifier =
+    Provider.of<ProductNotifier>(context, listen: false);
+    productNotifier.addProduct(product);
+
+  }
 
 
   @override
@@ -84,32 +112,7 @@ String subcatergorykey;
                         .size
                         .width,
                     decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image:
-                            AssetImage("images/dashbord/backcat.jpg"),
-                            fit: BoxFit.fill)),
-                  ),
-                  Opacity(
-                    opacity: 0.5,
-                    child: Container(
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height*2,
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: [
-                            const Color(0xFF185a9d),
-                            const Color(0xFF43cea2)
-                          ],
-                        ),
-                      ),
+                      gradient: linearcolor()
                     ),
                   ),
                   Padding(
@@ -120,11 +123,21 @@ String subcatergorykey;
                         color: Colors.white,
                       ),
                       onPressed: ( ) {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: ( context ) =>
-                                    ProductCollection()));
+
+                        if (text == "AddItem") {
+                          return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Item()));
+                        } else {
+                          return Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      ProductDisplay()));
+                        }
+
                       },
                     ),
                   ),
@@ -135,7 +148,7 @@ String subcatergorykey;
                           key: _formKey,
                           child: Padding(
                             padding: EdgeInsets.only(
-                                top: 15 * SizeConfig.heightMultiplier,
+                                top: 7 * SizeConfig.heightMultiplier,
                                 bottom: 5 * SizeConfig.heightMultiplier,
                                 left: 6 * SizeConfig.heightMultiplier,
                                 right: 6 * SizeConfig.heightMultiplier),
@@ -144,115 +157,111 @@ String subcatergorykey;
                               children: <Widget>[
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: 3 * SizeConfig.heightMultiplier,bottom: 6*SizeConfig.heightMultiplier),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Expanded(
-                                        flex: 6,
-                                        child: Opacity(
-                                          opacity: 0.8,
-                                          child: Material(
-                                            color: Colors.white,
-                                            child: Container(
-                                              height: 53,
-
-                                              decoration: BoxDecoration(
-
-                                                  border: Border.all(
-                                                      color: Color(0xFF185a9d)
-                                                  )
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                    left: 10.0),
-                                                child: Center(child: Row(
-                                                  children: <Widget>[
-                                                    Expanded(child: Text(
-                                                      text2 == null
-                                                          ? 'Search catergory'
-                                                          : text2, style: Theme
-                                                        .of(context)
-                                                        .textTheme
-                                                        .display1,)),
-                                                  ],
-                                                )),
-                                              ),
-                                            ),
+                                      top: 6 *
+                                          SizeConfig.heightMultiplier,
+                                      bottom: 3 *
+                                          SizeConfig.heightMultiplier),
+                                  child: Opacity(
+                                    opacity: .8,
+                                    child: TypeAheadField(
+                                      textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                        autofocus: false,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .display1,
+                                        decoration: InputDecoration(
+                                          labelText: (text == "AddItem")
+                                              ? (catergory ==
+                                              null)
+                                              ? "search by subcatertgory name"
+                                              : catergory
+                                              :_currentProduct.subcatergory ,
+                                          labelStyle: Theme.of(context)
+                                              .textTheme
+                                              .display1,
+                                          prefixIcon: Icon(Icons.search,
+                                              color: Colors.blueGrey),
+                                          fillColor: Colors.white,
+                                          filled: true,
+                                          focusedBorder:
+                                          OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(0xFF185a9d),
+                                                style: BorderStyle.solid,
+                                                width: 1),
+                                          ),
+                                          enabledBorder:
+                                          OutlineInputBorder(
+                                            borderSide: BorderSide(
+                                                color: Color(0xFF185a9d),
+                                                style: BorderStyle.solid,
+                                                width: 1),
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        flex: 4,
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: Opacity(
-                                            opacity: 0.8,
-                                            child: Row(
-                                              children: <Widget>[
-                                                Expanded(
-                                                  child: Padding(
-                                                    padding: const EdgeInsets
-                                                        .all(3.0),
-                                                    child: Container(
-                                                      height: 53,
-                                                      //   width: 40,
-                                                      decoration: BoxDecoration(
-                                                          color: Color(
-                                                              0xFF185a9d),
-                                                          borderRadius: BorderRadius
-                                                              .circular(12)
-                                                      ),
-                                                      child: IconButton(
-                                                        icon: Icon(Icons.check,
-                                                          color: Colors.white,),
-                                                        onPressed: ( ) {
-                                                          setState(( ) {
-                                                            catergory =
-                                                                text;
-                                                            subcatergory =
-                                                                text2;
-                                                            catergorykey=catkey;
-                                                            subcatergorykey=subcatkey;
-                                                            print(subcatkey);
-                                                            print(catkey);
-                                                          });
-                                                        },
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                Expanded(
-                                                  child: Container(
-
-                                                      height: 53,
-                                                      //     width: 40,
-                                                      decoration: BoxDecoration(
-                                                          color: Colors
-                                                              .blueGrey,
-                                                          borderRadius: BorderRadius
-                                                              .circular(12)
-                                                      ),
-
-                                                      child: InkWell(
-                                                          onTap: ( ) {
-                                                            Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (
-                                                                        context ) =>
-                                                                        SearchSubCatergory()));
-                                                          },
-                                                          child: Icon(
-                                                              Icons.search))),
-                                                ),
-                                              ],
+                                      suggestionsCallback:
+                                          (pattern) async {
+                                        return await _subcategoryService
+                                            .getSuggestions(pattern);
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return Column(
+                                          children: <Widget>[
+                                            ListTile(
+                                              leading:
+                                              Icon(Icons.category),
+                                              title: Text(
+                                                suggestion['catergory'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .display1.copyWith(color: Colors.black),
+                                              ),
+                                              subtitle:  Text(
+                                                suggestion['subcatergory'],
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .display1,
+                                              ),
                                             ),
-                                          ),
-                                        ),
-                                      )
-                                    ],
+                                            Divider(
+                                              color: Colors.grey,
+                                            )
+                                          ],
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        if (text == "AddItem") {
+                                          setState(() {
+                                            catergory =
+                                            suggestion['catergory'];
+
+                                            catergorykey =
+                                            suggestion['catergorykey'];
+                                            subcatergorykey= suggestion['uid'];
+                                            subcatergory=suggestion['subcatergory'];
+                                            print(
+                                                suggestion['catergory']);
+                                          });
+                                        } else {
+                                          setState(() {
+
+                                            _currentProduct
+                                                .catergory =
+                                            suggestion['catergory'];
+
+                                            _currentProduct.catergorykey =
+                                            suggestion['catergorykey'];
+                                            _currentProduct.subcatergorykey= suggestion['uid'];
+                                            _currentProduct
+                                                .subcatergory=suggestion['subcatergory'];
+                                          });
+                                        }
+                                      },
+                                    ),
                                   ),
                                 ),
+
                                 Center(
                                     child: Text(
                                       error,
@@ -263,35 +272,26 @@ String subcatergorykey;
                                           .copyWith(
                                           color: Colors.red, fontSize: 15),
                                     )),
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Opacity(
-                                        opacity: .8,
-                                        child: Padding(
-                                          padding: EdgeInsets.only(right:8.0),
-                                          child: Container(
-                                            color: Colors.white,
-                                            height: MediaQuery
-                                                .of(context)
-                                                .size
-                                                .height / 4,
-                                            child: OutlineButton(
-                                              onPressed: ( ) {
-                                                // ignore: deprecated_member_use
-                                                _selectImage(ImagePicker.pickImage(
-                                                    source: ImageSource.gallery),
-                                                    1);
-                                              },
-                                              child: _display1(),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
+                                (text=="AddItem")?
+                                Opacity(
+                                  opacity: .8,
+                                  child: Container(
+                                    color: Colors.white,
+                                    height: MediaQuery
+                                        .of(context)
+                                        .size
+                                        .height / 4,
+                                    child: OutlineButton(
+                                      onPressed: ( ) {
+                                        // ignore: deprecated_member_use
+                                        _selectImage(ImagePicker.pickImage(
+                                            source: ImageSource.gallery),
+                                            1);
+                                      },
+                                      child: _display1(),
                                     ),
-
-                                  ],
-                                ),
+                                  ),
+                                ): _showImage(),
                                 Center(
                                     child: Text(
                                       imgerror,
@@ -306,40 +306,17 @@ String subcatergorykey;
 
                                 Padding(
                                   padding: EdgeInsets.only(
-                                      top: 6 * SizeConfig.heightMultiplier,bottom: 6*SizeConfig.heightMultiplier),
+                                      top: 4 * SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier),
                                   child: Opacity(
                                     opacity: 0.8,
                                     child: Container(
                                       child: new Center(
                                           child: new TextFormField(
-                                              decoration: new InputDecoration(
-                                                labelText: "Product Name",
-                                                prefixIcon: Icon(Icons.add,
-                                                    color: Colors.blueGrey),
-                                                labelStyle: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .display1,
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                focusedBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                                enabledBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                              ),
-
+                                              initialValue:
+                                              (text == "AddItem")
+                                                  ? null
+                                                  : _currentProduct.productname,
+                                              decoration: inputDecaration(context, "Product Name",Icons.add),
                                               validator: (input) {
                                       Pattern pattern =
                                       r'^(?=.*?[A-Z])(?=.*?[a-z]).{2,}$';
@@ -355,10 +332,14 @@ String subcatergorykey;
                                       }
                                       },
                                               onChanged: ( input ) {
+                                                if(text=='AddItem'){
                                                 setState(( ) {
                                                   productname = input;
                                                 });
-                                              },
+                                              }else{
+                                                  _currentProduct.productname =
+                                                      input;
+                                                }},
                                               keyboardType: TextInputType.text,
                                               style: Theme
                                                   .of(context)
@@ -367,104 +348,139 @@ String subcatergorykey;
                                     ),
                                   ),
                                 ),
+
                                 Opacity(
                                   opacity: 0.8,
                                   child: Container(
+
                                     child: new Center(
                                         child: new TextFormField(
-                                            decoration: new InputDecoration(
-                                              labelText: "Product Searchkey",
-                                              prefixIcon: Icon(Icons.add,
-                                                  color: Colors.blueGrey),
-                                              labelStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .display1,
-                                              fillColor: Colors.white,
-                                              filled: true,
-                                              focusedBorder:
-                                              OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFF185a9d),
-                                                    style: BorderStyle.solid,
-                                                    width: 1),
+                                          initialValue: (text == "AddItem")
+                                              ? null
+                                              : _currentProduct.price.toString(),
+                                            decoration: inputDecaration(context, "Product Price", Icons.add),
 
-                                              ),
-                                              enabledBorder:
-                                              OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFF185a9d),
-                                                    style: BorderStyle.solid,
-                                                    width: 1),
-
-                                              ),
-                                            ),
                                             validator: ( input ) =>
                                             input
                                                 .isEmpty
-                                                ? 'Please type your product searchkey\n as first letter of the product name here'
+                                                ? 'Please type your product price here'
                                                 : null,
                                             onChanged: ( input ) {
-                                              setState(( ) {
-                                                productsearchkey = input;
-                                                subcatergorykey=subcatkey;
-                                              });
-                                            },
-                                            keyboardType: TextInputType.text,
-                                            style: Theme
-                                                .of(context)
-                                                .textTheme
-                                                .display1)),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 6 * SizeConfig.heightMultiplier,bottom: 6*SizeConfig.heightMultiplier),
-                                  child: Opacity(
-                                    opacity: 0.8,
-                                    child: Container(
-
-                                      child: new Center(
-                                          child: new TextFormField(
-                                              decoration: new InputDecoration(
-                                                labelText: "Product Price",
-                                                prefixIcon: Icon(Icons.add,
-                                                    color: Colors.blueGrey),
-                                                labelStyle: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .display1,
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                focusedBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                                enabledBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                              ),
-                                              validator: ( input ) =>
-                                              input
-                                                  .isEmpty
-                                                  ? 'Please type your product price here'
-                                                  : null,
-                                              onChanged: ( input ) {
+                                              if(text=='AddItem'){
                                                 setState(( ) {
                                                   String prices = input;
                                                   price = double.parse(prices);
                                                 });
+                                              }else{
+                                                setState(() {
+                                                  String prices = input;
+                                                  _currentProduct.price =
+                                                      double.parse(prices);
+                                                });
+                                              }
+
+
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            style: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .display1)),
+                                  ),
+                                ),
+                                CheckboxListTile(
+                                  title: Text("Capsual with card", style: Theme
+                                      .of(context)
+                                      .textTheme
+                                      .subhead,),
+                                  value: capsualtype,
+                                  onChanged: (newValue) {
+                                    if(text=='AddItem'){
+                                      setState(() {
+                                        capsualtype= newValue;
+                                      });
+                                    }else{
+                                      setState(() {
+
+                                        _currentProduct.capsualtype =newValue;
+                                      });
+                                    }
+
+                                  },
+                                  controlAffinity: ListTileControlAffinity.leading,  //  <-- leading Checkbox
+                                ),
+                                (capsualtype==true)? Opacity(
+                                  opacity: 0.8,
+                                  child: Container(
+
+                                    child: new Center(
+                                        child: new TextFormField(
+                                            initialValue: (text == "AddItem")
+                                                ? null
+                                                : _currentProduct.cardprice.toString(),
+                                            decoration: inputDecaration(context, "Product CardPrice", Icons.add),
+                                            onChanged: ( input ) {
+                                              if(text=='AddItem'){
+                                                setState(( ) {
+                                                  String prices = input;
+                                                  cardprice = double.parse(prices);
+                                                });
+                                              }else{
+                                                setState(() {
+                                                  String prices = input;
+                                                  _currentProduct.cardprice =
+                                                      double.parse(prices);
+                                                });
+                                              }
+
+
+                                            },
+                                            keyboardType: TextInputType.number,
+                                            style: Theme
+                                                .of(context)
+                                                .textTheme
+                                                .display1)),
+                                  ),
+                                ):Container(),
+
+
+
+                                Opacity(
+                                  opacity: 0.8,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 4 * SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier),
+                                    child: Container(
+
+                                      child: new Center(
+                                          child: new TextFormField(
+                                              initialValue: (text == "AddItem")
+                                                  ? null
+                                                  : _currentProduct.description,
+                                              decoration: inputDecaration(context, "Product Description",Icons.add),
+
+                                              validator: ( input ) =>
+                                              input
+                                                  .isEmpty
+                                                  ? 'Please type your product description here'
+                                                  : null,
+                                              onChanged: ( input ) {
+                                                if(text=='AddItem'){
+                                                  setState(( ) {
+                                                    description = input;
+                                                  });
+                                                }else{
+                                                  setState(() {
+
+                                                    _currentProduct.description =
+                                                        input;
+                                                  });
+                                                }
+
                                               },
-                                              keyboardType: TextInputType.number,
+                                              keyboardType: TextInputType.text,
+                                              maxLines: 7,
+
                                               style: Theme
                                                   .of(context)
                                                   .textTheme
@@ -478,117 +494,50 @@ String subcatergorykey;
 
                                     child: new Center(
                                         child: new TextFormField(
-                                            decoration: new InputDecoration(
-                                              labelText: "Product Description",
-                                              prefixIcon: Icon(Icons.add,
-                                                  color: Colors.blueGrey),
-                                              labelStyle: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .display1,
-                                              fillColor: Colors.white,
-                                              filled: true,
-
-                                              focusedBorder:
-                                              OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFF185a9d),
-                                                    style: BorderStyle.solid,
-                                                    width: 1),
-
-                                              ),
-                                              enabledBorder:
-                                              OutlineInputBorder(
-                                                borderSide: BorderSide(
-                                                    color: Color(0xFF185a9d),
-                                                    style: BorderStyle.solid,
-                                                    width: 1),
-
-                                              ),
-                                            ),
+                                            initialValue: (text == "AddItem")
+                                                ? null
+                                                : _currentProduct.quntity.toString(),
+                                            decoration:inputDecaration(context,  "Product Quntity",Icons.add),
                                             validator: ( input ) =>
                                             input
                                                 .isEmpty
-                                                ? 'Please type your product description here'
+                                                ? 'Please type your product quntity here'
                                                 : null,
                                             onChanged: ( input ) {
-                                              setState(( ) {
-                                                description = input;
-                                              });
-                                            },
-                                            keyboardType: TextInputType.text,
-                                            maxLines: 7,
+                                              if(text=='AddItem'){
+                                                setState(( ) {
+                                                  String quntitys = input;
+                                                  quntity = int.parse(quntitys);
+                                                });
+                                              }else{
+                                                setState(() {
 
+                                                  String quntitys = input;
+                                                  _currentProduct.quntity = int.parse(quntitys);
+                                                });
+                                              }
+
+                                            },
+                                            keyboardType: TextInputType.number,
                                             style: Theme
                                                 .of(context)
                                                 .textTheme
                                                 .display1)),
                                   ),
                                 ),
+
                                 Padding(
-                                  padding:EdgeInsets.only(
-                                      top: 6 * SizeConfig.heightMultiplier,bottom: 6*SizeConfig.heightMultiplier),
+                                   padding: EdgeInsets.only(
+                                top: 4 * SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier),
                                   child: Opacity(
                                     opacity: 0.8,
                                     child: Container(
 
                                       child: new Center(
                                           child: new TextFormField(
-                                              decoration: new InputDecoration(
-                                                labelText: "Product Quntity",
-                                                prefixIcon: Icon(Icons.add,
-                                                    color: Colors.blueGrey),
-                                                labelStyle: Theme
-                                                    .of(context)
-                                                    .textTheme
-                                                    .display1,
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                focusedBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                                enabledBorder:
-                                                OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-
-                                                ),
-                                              ),
-                                              validator: ( input ) =>
-                                              input
-                                                  .isEmpty
-                                                  ? 'Please type your product quntity here'
-                                                  : null,
-                                              onChanged: ( input ) {
-                                                setState(( ) {
-                                                  String quntitys = input;
-                                                  quntity = int.parse(quntitys);
-                                                });
-                                              },
-                                              keyboardType: TextInputType.number,
-                                              style: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .display1)),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding:EdgeInsets.only(
-                                      bottom: 6*SizeConfig.heightMultiplier),
-                                  child: Opacity(
-                                    opacity: 0.8,
-                                    child: Container(
-
-                                      child: new Center(
-                                          child: new TextFormField(
+                                            initialValue: (text == "AddItem")
+                                                ? null
+                                                : _currentProduct.offer.toString(),
                                               decoration: new InputDecoration(
                                                 labelText: "Product Offer",
                                                 suffixText: "%",suffixStyle:  Theme
@@ -622,11 +571,22 @@ String subcatergorykey;
                                               ),
 
                                               onChanged: ( input ) {
-                                                setState(( ) {
-                                                  String quntitys = input;
-                                                  offer = double.parse(quntitys);
-                                                  catergorykey=catkey;
-                                                });
+                                                if(text=='AddItem'){
+                                                  setState(( ) {
+                                                    String quntitys = input;
+                                                    offer = double.parse(quntitys);
+
+                                                  });
+                                                }else{
+                                                  setState(() {
+
+                                                    String quntitys = input;
+                                                    _currentProduct.offer =
+                                                        double.parse(quntitys);
+                                                  });
+                                                }
+
+
                                               },
                                               keyboardType: TextInputType.number,
                                               style: Theme
@@ -653,9 +613,16 @@ String subcatergorykey;
                                           activeColor: Colors.white,
                                           groupValue: type,
                                           onChanged: ( input ) {
-                                            setState(( ) {
-                                              type = input;
-                                            });
+                                            if(text=='AddItem'){
+                                              setState(( ) {
+                                                type = input;
+                                              });
+                                            }else{
+                                              setState(() {
+                                                _currentProduct.type = input;
+                                              });
+                                            }
+
                                           },
                                         ),
                                       ),
@@ -675,10 +642,15 @@ String subcatergorykey;
                                           groupValue: type,
 
                                           onChanged: ( input ) {
-                                            setState(( ) {
-                                              type = input;
-
-                                            });
+                                            if(text=='AddItem'){
+                                              setState(( ) {
+                                                type = input;
+                                              });
+                                            }else{
+                                              setState(() {
+                                                _currentProduct.type = input;
+                                              });
+                                            }
                                           },
                                         ),
                                       ),
@@ -695,7 +667,7 @@ String subcatergorykey;
                                           .textTheme
                                           .display1
                                           .copyWith(
-                                          color: Colors.red, fontSize: 15),
+                                          color: Colors.red, fontSize: 12),
                                     )),
 
 
@@ -710,7 +682,7 @@ String subcatergorykey;
                                     elevation: 4.0,
                                     child: InkWell(
                                       onTap: ( ) async {
-                                        if (_formKey.currentState
+                                       if(text=="AddItem"){ if (_formKey.currentState
                                             .validate()) {
                                           setState(() {
                                             loading = true;
@@ -754,9 +726,9 @@ String subcatergorykey;
                                                       price,
                                                       imageUrl,
                                                       description,
-                                                      productsearchkey,
+
                                                     offer!=null?offer:0,
-                                                      offer!=null? (price-(price*offer/100)):0,catergorykey,subcatergorykey
+                                                      offer!=null? (price-(price*offer/100)):0,catergorykey,subcatergorykey,cardprice,capsualtype
 
                                                   );
 
@@ -814,42 +786,10 @@ String subcatergorykey;
                                                                             MaterialPageRoute(
                                                                                 builder: (
                                                                                     context ) =>
-                                                                                    ProductCollection()));
+                                                                                    Item()));
                                                                       },
-                                                                      child:
-                                                                      Container(
-                                                                        height: 40.0,
-                                                                        width: 100.0,
-                                                                        decoration:
-                                                                        BoxDecoration(
-                                                                          gradient:
-                                                                          LinearGradient(
-                                                                            begin: Alignment
-                                                                                .topLeft,
-                                                                            end: Alignment
-                                                                                .bottomRight,
-                                                                            colors: [
-                                                                              const Color(
-                                                                                  0xFF185a9d),
-                                                                              const Color(
-                                                                                  0xFF43cea2)
-                                                                            ],
-                                                                          ),
-                                                                          borderRadius:
-                                                                          BorderRadius
-                                                                              .circular(
-                                                                              20.0),
-                                                                        ),
-                                                                        child: Center(
-                                                                          child: Text(
-                                                                              "okay",
-                                                                              style: Theme
-                                                                                  .of(
-                                                                                  context)
-                                                                                  .textTheme
-                                                                                  .subhead),
-                                                                        ),
-                                                                      ),
+                                                                      child:buttonContainer(context, 'Okey', 43, 100),
+
                                                                     ),
                                                                   ),
                                                                 ),
@@ -862,7 +802,7 @@ String subcatergorykey;
                                               } else {
                                                 setState(( ) {
                                                   error =
-                                                  "please provide a subcatergory of product and click blue check button";
+                                                  "please provide a subcatergory of product";
                                                   loading = false;
                                                 });
                                               }
@@ -881,30 +821,13 @@ String subcatergorykey;
                                               loading = false;
                                             });
                                           }
-                                        }
+                                        }}else{
+                                         _currentProduct.offerprice=(_currentProduct.price-(_currentProduct.price*_currentProduct.offer/100));
+                                         saveEdit();
+                                       }
                                       },
-                                      child: Container(
-                                        height: 40,
-                                        decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              const Color(0xFF185a9d),
-                                              const Color(0xFF43cea2)
-                                            ],
-                                          ),
-                                          borderRadius:
-                                          BorderRadius.circular(20.0),
-                                        ),
-                                        child: Center(
-                                          child: Text("Save",
-                                              style: Theme
-                                                  .of(context)
-                                                  .textTheme
-                                                  .subhead),
-                                        ),
-                                      ),
+                                      child:buttonContainerWithBlue(context,'Save',43,null)
+
                                     ),
                                   ),
                                 ),
@@ -923,6 +846,145 @@ String subcatergorykey;
       ),
     );
   }
+  _showImage() {
+    if (_imageFile == null && _imageUrl == null) {
+      return Text("image placeholder");
+    } else if (_imageFile != null) {
+      print('showing image from local file');
+
+      return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+
+          Image.file(
+            _imageFile,
+            fit: BoxFit.cover,
+            height: MediaQuery.of(context).size.height / 3,
+          ),
+          FlatButton(
+              padding: EdgeInsets.all(16),
+              color: Colors.black54,
+              child: Text(
+                'Change image',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400),
+              ),
+              onPressed: () async {
+                File imageFile =
+                // ignore: deprecated_member_use
+                await ImagePicker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 50,
+                    maxWidth: 400);
+
+                if (imageFile != null) {
+                  setState(() {
+                    _imageFile = imageFile;
+                  });
+                }
+              }),
+
+        ],
+      );
+    } else if (_imageUrl != null) {
+      print('showing image from url');
+
+      return Stack(
+        alignment: AlignmentDirectional.bottomCenter,
+        children: <Widget>[
+
+          Container(
+
+              height: MediaQuery.of(context).size.height / 3,
+              child: Container(
+                decoration: BoxDecoration(
+                    image: DecorationImage(
+                        image: NetworkImage(_imageUrl), fit: BoxFit.fill)),
+              )),
+          FlatButton(
+              padding: EdgeInsets.all(16),
+              color: Colors.black54,
+              child: Text(
+                'Change Image',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w400),
+              ),
+              onPressed: () async {
+                File imageFile =
+                // ignore: deprecated_member_use
+                await ImagePicker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 50,
+                    maxWidth: 400);
+
+                if (imageFile != null) {
+                  setState(() {
+                    _imageFile = imageFile;
+                  });
+                }
+              })
+        ],
+      );
+    }
+  }
+
+  saveEdit() {
+    if (!_formKey.currentState.validate()) {
+      return;
+    }
+    _formKey.currentState.save();
+
+    uploadProductAndImage(
+        _currentProduct /*widget.isUpdating*/,
+        _imageFile,_onProductUploaded
+    );
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Container(
+              height: 150.0,
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.only(top: 20.0),
+                    child: Text(
+                      "Product is updated",
+                      style: Theme.of(context).textTheme.display1,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(30.0),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(20.0),
+                      elevation: 4.0,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(20.0),
+                        onTap: () {
+                          // Navigator.pop(context);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ProductDisplay()));
+
+                        },
+                        child:buttonContainer(context, 'Okey', 40, 100)
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
 
 
   void _selectImage( Future<File> pickImage, int imageNumber ) async {
@@ -939,7 +1001,7 @@ String subcatergorykey;
     if (_image == null) {
       return Padding(
         padding: EdgeInsets.all(40),
-        child: Icon(Icons.add),
+        child: Icon(Icons.camera_alt),
       );
     } else {
       return Image.file(_image, fit: BoxFit.fill,);

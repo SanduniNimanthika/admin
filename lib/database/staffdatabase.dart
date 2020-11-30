@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/module/staff.dart';
+import 'package:admin/notifer/staffnotifer.dart';
 
 
 class DatabaseService{
@@ -76,7 +77,23 @@ Future profileupdate(
     });
 
 
+
+
 }
 
 
 
+getStaff(StaffNotifier staffNotifier) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('Staff')
+      .getDocuments();
+
+  List<Staff> _staffList = [];
+
+  snapshot.documents.forEach((document) {
+    Staff staff = Staff.fromMap(document.data)!=null?Staff.fromMap(document.data):null;
+    _staffList.add(staff);
+  });
+
+  staffNotifier.staffList = _staffList;
+}

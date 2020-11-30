@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/module/user.dart';
+import 'package:admin/notifer/usernotifer.dart';
 class DatabaseServiceUser{
   final String uid;
 
@@ -24,6 +25,7 @@ class DatabaseServiceUser{
       email: snapshot.data['email'],
       telenumber: snapshot.data['telenumber'],
       address: snapshot.data['address'],
+      hometown: snapshot.data['hometown']
 
     );
   }
@@ -38,4 +40,21 @@ class DatabaseServiceUser{
       userCollection.where('email',isGreaterThanOrEqualTo: suggestion).getDocuments().then((snap){
         return snap.documents;
       });
+}
+
+
+
+getUser(UserNotifier userNotifier) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('User')
+      .getDocuments();
+
+  List<User> _userList = [];
+
+  snapshot.documents.forEach((document) {
+    User user = User.fromMap(document.data)!=null?User.fromMap(document.data):null;
+    _userList.add(user);
+  });
+
+  userNotifier.userList = _userList;
 }

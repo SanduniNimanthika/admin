@@ -50,7 +50,7 @@ class _EmailSenderState extends State<EmailSender> {
 
     try {
       await FlutterEmailSender.send(email);
-      platformResponse = 'success';
+      platformResponse = 'send an email';
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => OrderTab()));
     } catch (error) {

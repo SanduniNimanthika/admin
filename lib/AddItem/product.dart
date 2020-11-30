@@ -1,6 +1,8 @@
 import 'package:admin/Dashborad/Admindashbord.dart';
 import 'package:admin/AddItem/addcat.dart';
 import 'package:admin/AddItem/addsubcat.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
+import 'package:admin/database/Catdatabase.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/AddItem/addproduct.dart';
 import 'package:flutter/cupertino.dart';
@@ -10,6 +12,8 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/notifer/catergorynotifer.dart';
+import 'package:admin/database/productdatabase.dart';
+import 'package:admin/StoreDisplay/store.dart';
 
 class Item extends StatefulWidget {
   @override
@@ -17,6 +21,17 @@ class Item extends StatefulWidget {
 }
 
 class _ItemState extends State<Item> {
+  @override
+  void initState() {
+    ProductNotifier productNotifier =
+    Provider.of<ProductNotifier>(context, listen: false);
+    getProducts(productNotifier);
+    CatergoryNotifier catergoryNotifier =
+    Provider.of<CatergoryNotifier>(context, listen: false);
+    getCatergories(catergoryNotifier);
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,85 +43,93 @@ class _ItemState extends State<Item> {
         body: SingleChildScrollView(
       child: Stack(
         children: <Widget>[
-          ClipPath(
-            clipper: ClippingPath(),
-            child: Container(
-              height: (SizeConfig.isMobilePortrait
-                  ? (MediaQuery.of(context).size.height / 5 * 2)
-                  : (MediaQuery.of(context).size.height / 4 * 3)),
-              width: MediaQuery.of(context).size.width,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-                ),
-              ),
+          Container(
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+              gradient: linearcolor()
             ),
           ),
           Padding(
             padding: EdgeInsets.only(
                 left: 3 * SizeConfig.heightMultiplier,
                 top: 8 * SizeConfig.heightMultiplier),
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdminPanel()));
-                      },
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        size: 25.0,
-                        color: Colors.white,
-                      )),
-                ),
-                Expanded(
-                  flex: 13,
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      left: 5 * SizeConfig.heightMultiplier,
-                    ),
-                    child: Text(
-                      "Add Items",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headline
-                          .copyWith(fontSize: 35.0),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            child: InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AdminPanel()));
+                },
+                child: Icon(
+                  Icons.clear,
+                  size: 25.0,
+                  color: Colors.white,
+                )),
           ),
           Padding(
             padding: EdgeInsets.only(
-                top: 25 * SizeConfig.heightMultiplier,
+                top: 20 * SizeConfig.heightMultiplier,
                 left: 4 * SizeConfig.heightMultiplier,
                 right: 4 * SizeConfig.heightMultiplier,
                 bottom: 4 * SizeConfig.heightMultiplier),
             child: Column(
               children: <Widget>[
-                //product
+                Padding(
+                  padding: EdgeInsets.only(
+                      top: 4 * SizeConfig.heightMultiplier,
+                      bottom: 4 * SizeConfig.heightMultiplier),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              right: 2 * SizeConfig.heightMultiplier),
 
-                InkWell(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AddProduct()));
-                    },
-                    child: dashbord(
-                      context,
-                      "Product",
-                      "images/dashbord/medi.png",
-                      productNotifier.productList.length.toString(),
-                      MediaQuery.of(context).size.width,
-                    )),
+
+                          child:  InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddProduct(text: 'AddItem',)));
+                              },
+                              child: dashbord(
+                                context,
+                                "Add Product",
+                                "images/dashbord/medi.png",
+                                productNotifier.productList.length.toString(),
+                                MediaQuery.of(context).size.width,
+                              )),
+                        ),
+                      ),
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                              left: 2 * SizeConfig.heightMultiplier),
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>Store()));
+                              },
+                              child: dashbord(
+                                context,
+                                "Visit Store",
+                                "images/dashbord/shop-icon.png",
+                                null,
+                                MediaQuery.of(context).size.width,
+                              )),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
 
                 Padding(
                   padding: EdgeInsets.only(
@@ -126,11 +149,11 @@ class _ItemState extends State<Item> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AddSubCat()));
+                                        builder: (context) => AddSubCat(text: 'AddItem',)));
                               },
                               child: dashbord(
                                 context,
-                                "Subcategory",
+                                "Add Subcategory",
                                 "images/dashbord/drug_basket.png",'',
 
                                 MediaQuery.of(context).size.width,
@@ -147,11 +170,11 @@ class _ItemState extends State<Item> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => AddCat()));
+                                        builder: (context) => AddCat(text: 'AddItem',)));
                               },
                               child: dashbord(
                                 context,
-                                "Category",
+                                "Add Category",
                                 "images/dashbord/drug_basket.png",
                                   catergoryNotifier.catergoryList.length.toString(),
                                 MediaQuery.of(context).size.width,
@@ -172,6 +195,8 @@ class _ItemState extends State<Item> {
     ));
   }
 }
+
+
 
 Widget dashbord(
     BuildContext context, String name, String img, String count, double width) {
@@ -197,7 +222,7 @@ Widget dashbord(
                     style: Theme.of(context)
                         .textTheme
                         .display1
-                        .copyWith(fontSize: 23, color: Color(0xFF185a9d)))),
+                        .copyWith(fontSize: 18, color: Color(0xFF185a9d)))),
             Expanded(
                 flex: 2,
                 child: Image(
@@ -207,11 +232,11 @@ Widget dashbord(
                 flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(count,
+                  child: (count!=null)?Text(count,
                       style: Theme.of(context)
                           .textTheme
                           .display1
-                          .copyWith(fontSize: 23, color: Color(0xFF185a9d))),
+                          .copyWith(fontSize: 20, color: Color(0xFF185a9d))):null
                 ))
           ],
         ),
@@ -220,24 +245,4 @@ Widget dashbord(
   );
 }
 
-class ClippingPath extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0.0, size.height - 40);
-    path.quadraticBezierTo(
-        size.width / 4, size.height, size.width / 2, size.height);
-    path.quadraticBezierTo(size.width - (size.width / 4), size.height,
-        size.width, size.height - 40);
-    path.lineTo(size.width, size.height / 1.5);
-    path.lineTo(
-      size.width,
-      0.0,
-    );
-    path.close();
-    return path;
-  }
 
-  @override
-  bool shouldReclip(CustomClipper<Path> oldCliper) => false;
-}

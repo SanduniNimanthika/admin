@@ -1,15 +1,19 @@
 import 'package:admin/StoreDisplay/store.dart';
-import 'package:admin/profile/proflie.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:admin/module/staff.dart';
-import 'package:admin/services/authentication.dart';
+
 import 'package:admin/commanpages/configue.dart';
 import 'package:admin/database/staffdatabase.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:admin/mainpages/home.dart';
-
+import 'package:admin/notifer/perscriptionnotifer.dart';
+import 'package:admin/notifer/oderhistorynotifer.dart';
+import 'package:admin/database/productdatabase.dart';
+import 'package:admin/database/perscription.dart';
+import 'package:admin/database/oderhistory.dart';
+import 'package:intl/intl.dart';
 import 'package:admin/commanpages/loading.dart';
 import 'package:admin/order/odertab.dart';
 import 'package:admin/notifer/productnotifer.dart';
@@ -23,14 +27,41 @@ bool loading = false;
 class _StaffPanelState extends State<StaffPanel> {
 
   final DatabaseService databaseService = DatabaseService();
-  final AuthService _auth = AuthService();
 
+  @override
+  void initState() {
+    ProductNotifier productNotifier =
+    Provider.of<ProductNotifier>(context, listen: false);
+    getProducts(productNotifier);
+
+
+    PerscriptionOrderHistoryNotifier perscriptionOrderHistoryNotifier=
+    Provider.of<PerscriptionOrderHistoryNotifier>(context, listen: false);
+    getPerscriptionOrderHistory(perscriptionOrderHistoryNotifier);
+
+    ProductOrderHistoryNotifier productOrderHistoryNotifier=
+    Provider.of<ProductOrderHistoryNotifier>(context, listen: false);
+    getProductOrderHistory(productOrderHistoryNotifier);
+
+    super.initState();
+  }
 
 
   @override
   Widget build(BuildContext context) {
     ProductNotifier productNotifier = Provider.of<ProductNotifier>(context);
+
+
+    PerscriptionOrderHistoryNotifier perscriptionOrderHistoryNotifier=
+    Provider.of<PerscriptionOrderHistoryNotifier>(context);
+    ProductOrderHistoryNotifier productOrderHistoryNotifier=
+    Provider.of<ProductOrderHistoryNotifier>(context);
+
     final staff = Provider.of<Staff>(context, listen: false);
+    final DateTime now = DateTime.now();
+    final DateFormat formatter = DateFormat('yyyy-MM-dd');
+    final String formatted = formatter.format(now);
+
     return SafeArea(
       child: StreamBuilder<Staff>(
           stream: DatabaseService(uid: staff.staffkey).profileData,
@@ -50,59 +81,78 @@ class _StaffPanelState extends State<StaffPanel> {
                 body: SingleChildScrollView(
                   child: Stack(
                     children: <Widget>[
-                      ClipPath(
-                        clipper: ClippingPath(),
-                        child: Container(
-                          height:(SizeConfig.isMobilePortrait?(MediaQuery.of(context).size.height/5*2):(MediaQuery.of(context).size.height/4*3)),
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xFF185a9d),
-                                const Color(0xFF43cea2)
-                              ],
-                            ),
-                          ),
-                        ),
+                      Container(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        decoration: BoxDecoration(gradient: linearcolor()),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            left: 3 * SizeConfig.heightMultiplier,
-                            top: 8 * SizeConfig.heightMultiplier),
-                        child: Column(
+                            left: 15,
+                            top:30,
+                        right: 15),
+                        child:  Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            Text(
-                              "Hello,",
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headline
-                                  .copyWith(fontSize: 35.0),
+                            Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  "Welcome ,",
+                                  style: Theme.of(context).textTheme.headline,
+                                ),
+                                IconButton(
+                                    icon: Icon(
+                                      Icons.settings,
+                                      color: Colors.white,
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => Setting()),
+                                      );
+                                    }),
+                              ],
                             ),
                             Text(
-                              profile.fullname!=null?profile.fullname:'',
+                              profile.fullname,
                               style: Theme.of(context)
                                   .textTheme
-                                  .headline
-                                  .copyWith(fontSize: 30.0),
+                                  .display1
+                                  .copyWith(
+                                  color: Colors.white, fontSize: 19),
+                            ),
+                            SizedBox(
+                              height: 15,
+                            ),
+                            Text(
+                              formatted,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .display1
+                                  .copyWith(color: Colors.white),
                             ),
                           ],
                         ),
                       ),
+
                       Padding(
-                        padding:  EdgeInsets.only(top:25*SizeConfig.heightMultiplier,left: 4*SizeConfig.heightMultiplier,
-                            right: 4*SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier),
+                        padding:  EdgeInsets.only(top:130,left:20,
+                            right: 20,bottom: 20),
                         child: Column(
                           children: <Widget>[
+                            SizedBox(
+                              height: 30,
+                            ),
                             InkWell(
                                 onTap: (){
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) => OrderTab()));
                                 },
-                                child: dashbord(context,"Order","images/dashbord/drug_basket.png",'255',MediaQuery.of(context).size.width,)
+                                child: dashbord(context,"Order","images/dashbord/drug_basket.png",(productOrderHistoryNotifier.productOrderHistoryList.length+perscriptionOrderHistoryNotifier.perscriptionOrderHistoryList.length).toString(),MediaQuery.of(context).size.width,)
                             ),
 
                             //product
@@ -115,7 +165,7 @@ class _StaffPanelState extends State<StaffPanel> {
                                         context,
                                         MaterialPageRoute(builder: (context) => Store()));
                                   },
-                                  child: dashbord(context,"Product","images/dashbord/drug_basket.png",productNotifier.productList.length.toString(),MediaQuery.of(context).size.width,)
+                                  child: dashbord(context,"Product","images/dashbord/drug_basket.png", productNotifier.productList.length.toString(),MediaQuery.of(context).size.width,)
                               ),
                             ),
 
@@ -123,52 +173,7 @@ class _StaffPanelState extends State<StaffPanel> {
 
 
 
-                            Padding(
-                              padding:  EdgeInsets.only(top:4*SizeConfig.heightMultiplier,bottom: 4*SizeConfig.heightMultiplier ),
-                              child: Row(
-                                children: <Widget>[
-                                  Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding:  EdgeInsets.only(right:2*SizeConfig.heightMultiplier),
 
-                                      //my account
-                                      child: InkWell(
-                                          onTap: (){
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => Setting()),
-                                            );
-                                          },
-                                          child:dashbord(context,"Settings","images/dashbord/person-icon-blue-9.png",'',MediaQuery.of(context).size.width,)
-
-
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    flex: 1,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(left:2*SizeConfig.heightMultiplier),
-                                      child: InkWell(
-                                          onTap: ()async {
-                                            await _auth.signOut(context);
-                                            Navigator.pushReplacement(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (BuildContext context) =>
-                                                        Homepage()));
-
-                                          },
-                                          child: dashbord(context,"Logout","images/dashbord/secu.png",'',MediaQuery.of(context).size.width,)
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                            ),
                           ],
                         ),
                       )
@@ -224,24 +229,4 @@ Widget dashbord(BuildContext context,String name,String img,String count,double 
 
 
 
-class ClippingPath extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0.0, size.height - 40);
-    path.quadraticBezierTo(
-        size.width / 4, size.height, size.width / 2, size.height);
-    path.quadraticBezierTo(size.width - (size.width / 4), size.height,
-        size.width, size.height - 40);
-    path.lineTo(size.width, size.height / 1.5);
-    path.lineTo(
-      size.width,
-      0.0,
-    );
-    path.close();
-    return path;
-  }
 
-  @override
-  bool shouldReclip(CustomClipper<Path> oldCliper) => false;
-}

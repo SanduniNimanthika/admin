@@ -1,10 +1,12 @@
 import 'dart:ui';
+import 'package:admin/AddItem/product.dart';
+import 'package:admin/StoreDisplay/store.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:admin/StoreDisplay/productlist.dart';
 import 'package:admin/module/catergory.dart';
 import 'package:admin/database/Catdatabase.dart';
-import 'package:admin/AddItem/productcollection.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -62,20 +64,14 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
           // linear background
           child: Container(
               decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-                  tileMode: TileMode.repeated,
-                ),
+                gradient:linearcolor()
               ),
               child: Column(
                 children: <Widget>[
                   Expanded(
                     flex: 2,
-                    child: Container(
-                      child: Padding(
-                        padding: const EdgeInsets.all(23.0),
+                    child: Center(
+                      child: Container(
                         child: Text(
                           catergoryNotifier.currentCatergory.catergory,
                           style: Theme.of(context)
@@ -136,174 +132,182 @@ class _SubCatergorylistState extends State<SubCatergorylist> {
                 ],
               )),
         ),
-        body: GridView.builder(
+        body: ListView.builder(
             shrinkWrap: true,
-            //  physics: ScrollPhysics(),
-            gridDelegate:
-            SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio:
-            MediaQuery.of(context).size.width /
-                MediaQuery.of(context).size.height/0.85),
             itemCount: productNotifier.productList.length,
             itemBuilder: (BuildContext context, int index) {
-              return (catergoryNotifier.currentCatergory.catergory ==
-                      productNotifier.productList[index].catergory)
-                  ? InkWell(
-                    onTap: () {
-                      productNotifier.currentProduct =
-                          productNotifier.productList[index];
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (BuildContext context) {
-                        return ProductDisplay();
-                      }));
-                    },
-                    child: Padding(
-                        padding:
-                        EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
-                        child: Material(
-                          borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(25.0),
-                              bottomRight: Radius.circular(25.0)),
-                          elevation: 5,
-                          shadowColor: Colors.greenAccent,
-                          child: Container(
-                              height:
-                              MediaQuery.of(context).size.height / 9 * 2,
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(25.0),
-                                      bottomRight: Radius.circular(25.0))),
-                              child: Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                  children: <Widget>[
-                                    Expanded(
-                                      flex: 4,
-                                      child: Container(
-                                          decoration: BoxDecoration(
-                                              shape: BoxShape.rectangle,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft:
-                                                  Radius.circular(25.0),
-                                                  bottomRight:
-                                                  Radius.circular(25.0))),
-                                          width: MediaQuery.of(context)
-                                              .size
-                                              .width /
-                                              3,
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height /
-                                              5,
-                                          child: Stack(
-                                            children: <Widget>[
+              return(catergoryNotifier.currentCatergory.catergory ==
+                  productNotifier.productList[index].catergory)
+                  ?
+                    InkWell(
+                        onTap: () {
+                          productNotifier.currentProduct =
+                              productNotifier.productList[index];
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (BuildContext context) {
+                            return ProductDisplay();
+                          }));
+                        },
+                        child: Padding(
+                            padding:
+                            EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
+                            child: Material(
+                              borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25.0),
+                                  bottomRight: Radius.circular(25.0)),
+                              elevation: 5,
+                              shadowColor: Colors.greenAccent,
+                              child: Container(
+                                  height:
+                                  MediaQuery.of(context).size.height / 9 * 2,
+                                  decoration: boxDecarationhistory(),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          flex: 2,
+                                          child: Container(
+                                              decoration: boxDecarationhistory(),
+                                              width: MediaQuery.of(context)
+                                                  .size
+                                                  .width /
+                                                  3,
+                                              height: MediaQuery.of(context)
+                                                  .size
+                                                  .height /
+                                                  5,
+                                              child: Stack(
+                                                children: <Widget>[
 
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                    shape: BoxShape.rectangle,
-                                                    borderRadius: BorderRadius.only(
-                                                        topLeft:
-                                                        Radius.circular(25.0),
-                                                        bottomRight:
-                                                        Radius.circular(25.0)),
-                                                    image: DecorationImage(
-                                                        image: NetworkImage(
-                                                            productNotifier
-                                                                .productList[index]
-                                                                .images),
-                                                        fit: BoxFit.fill)),
-                                              ),
-                                              Align(
-                                                  alignment: Alignment.bottomRight,
-                                                  child:(productNotifier.productList[index].offer!=0) ?Container(
-                                                    height: 37,
-                                                    width: 57.0,
+                                                  Container(
                                                     decoration: BoxDecoration(
-                                                      color: Colors.red,
-                                                      shape: BoxShape.rectangle,
-                                                      borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(25.0),
-                                                          bottomRight: Radius.circular(25.0)),
-                                                    ),
-                                                    child: Center(
-                                                      child: Text( '${productNotifier.productList[index].offer.toString()}%',
-                                                          style: Theme.of(context)
-                                                              .textTheme
-                                                              .subhead
+                                                        shape: BoxShape.rectangle,
+                                                        borderRadius: BorderRadius.only(
+                                                            topLeft:
+                                                            Radius.circular(25.0),
+                                                            bottomRight:
+                                                            Radius.circular(25.0)),
+                                                        image: DecorationImage(
+                                                            image: NetworkImage(
+                                                                productNotifier
+                                                                    .productList[index]
+                                                                    .images),
+                                                            fit: BoxFit.fill)),
+                                                  ),
+                                                  Align(
+                                                      alignment: Alignment.bottomRight,
+                                                      child:(productNotifier.productList[index].offer!=0) ?Container(
+                                                        height: 37,
+                                                        width: 57.0,
+                                                        decoration: BoxDecoration(
+                                                          color: Colors.red,
+                                                          shape: BoxShape.rectangle,
+                                                          borderRadius: BorderRadius.only(
+                                                              topLeft: Radius.circular(25.0),
+                                                              bottomRight: Radius.circular(25.0)),
+                                                        ),
+                                                        child: Center(
+                                                          child: Text( '${productNotifier.productList[index].offer.toString()}%',
+                                                              style: Theme.of(context)
+                                                                  .textTheme
+                                                                  .subhead
 
-                                                      ),
-                                                    ),
-                                                  ):Container()
-                                              )
-                                            ],
-                                          )),
-                                    ),
-                                    Expanded(
-                                      flex:3 ,
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            left: 8.0, right: 8.0,top: 8.0),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Expanded(
-                                              flex: 2,
-                                              child: Text(
-                                                productNotifier
-                                                    .productList[index]
-                                                    .productname,
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subhead
-                                                    .copyWith(
-                                                    color:
-                                                    Color(0xFF185a9d),
-                                                    fontSize: 18.0),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 1,
-                                              child: Container(
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                                  children: <Widget>[
-                                                    Text("In Stock :  ",
-                                                        style: Theme.of(context)
-                                                            .textTheme
-                                                            .display1),
-                                                    Text(
-                                                      productNotifier
+                                                          ),
+                                                        ),
+                                                      ):Container()
+                                                  )
+                                                ],
+                                              )),
+                                        ),
+                                        Expanded(
+                                          flex:3 ,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                                left: 8.0, right: 8.0,top: 8.0),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                              children: <Widget>[
+                                                Expanded(
+                                                  flex: 3,
+                                                  child: Text(
+                                                    productNotifier
+                                                        .productList[index]
+                                                        .productname,
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .subhead
+                                                        .copyWith(
+                                                        color:
+                                                        Color(0xFF185a9d),
+                                                        ),
+                                                  ),
+                                                ),
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    child: Text(
+                                                     ' Rs: ${productNotifier
                                                           .productList[index]
-                                                          .quntity
-                                                          .toString(),
+                                                          .price
+                                                          .toString()}',
                                                       style: Theme.of(context)
                                                           .textTheme
                                                           .display1
                                                           .copyWith(
-                                                          color:
-                                                          Colors.red),
+                                                          fontSize: 14),
                                                     ),
-                                                  ],
+                                                  ),
                                                 ),
-                                              ),
+
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: Container(
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                      children: <Widget>[
+                                                        Text("In Stock :  ",
+                                                            style: Theme.of(context)
+                                                                .textTheme
+                                                                .display1.copyWith(fontSize: 14)),
+                                                        Text(
+                                                          productNotifier
+                                                              .productList[index]
+                                                              .quntity
+                                                              .toString(),
+                                                          style: Theme.of(context)
+                                                              .textTheme
+                                                              .display1
+                                                              .copyWith(
+                                                              color:
+                                                              Colors.red,fontSize: 14),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+
+
+                                              ],
                                             ),
-
-
-                                          ],
+                                          ),
                                         ),
-                                      ),
+                                      ],
                                     ),
-                                  ],
-                                ),
-                              )),
-                        )),
-                  )
-                  : Container();
-            }),
+                                  )),
+                            )),
+                      )
+
+                : Container(
+              width: 0,
+              height: 0,
+              );
+          }
+        ),
 
         floatingActionButton: Floting()
 
@@ -324,7 +328,7 @@ class Floting extends StatelessWidget {
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ProductCollection()));}
+              builder: (context) => Store()));}
     return FloatingActionButton(
       backgroundColor: Colors.red,
       onPressed: () {
@@ -335,8 +339,68 @@ class Floting extends StatelessWidget {
           then((docs){
             if (docs.documents[0].exists) {
               if (docs.documents[0].data['role'] == 'admin'){
-                deleteCatergory(
-                    catergoryNotifier.currentCatergory, _onCatergoryDeleted);
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return Dialog(
+                        shape:
+                        RoundedRectangleBorder(
+                          borderRadius:
+                          BorderRadius.circular(
+                              20.0),
+                        ),
+                        child: Container(
+                          height: 300.0,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Icon(
+                                  Icons.warning,color: Colors.red,size: 30,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.all(
+                                     20.0),
+                                child: Text(
+                                  "After you delete an Catergory, it's permanently deleted and all the products within catergory also deleted. Catergories can't be undeleted.",
+                                  style: Theme.of(
+                                      context)
+                                      .textTheme
+                                      .display1.copyWith(color: Colors.red,),
+                                  textAlign: TextAlign.justify,
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                EdgeInsets.all(
+                                    30.0),
+                                child: Material(
+                                  borderRadius:
+                                  BorderRadius
+                                      .circular(
+                                      20.0),
+                                  elevation: 4.0,
+                                  child: InkWell(
+                                      borderRadius:
+                                      BorderRadius
+                                          .circular(
+                                          20.0),
+                                      onTap: () {
+                                        deleteCatergory(
+                                            catergoryNotifier.currentCatergory, _onCatergoryDeleted);
+                                      },
+                                      child:buttonContainer(context, 'okey', 40, 150)
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    });
+
               }else {
                 showDialog(
                     context: context,
@@ -382,37 +446,7 @@ class Floting extends StatelessWidget {
                                     onTap: () {
                                       Navigator.pop(context);
                                     },
-                                    child:
-                                    Container(
-                                      height: 40.0,
-                                      width: 100.0,
-                                      decoration:
-                                      BoxDecoration(
-                                        gradient:
-                                        LinearGradient(
-                                          begin: Alignment
-                                              .topLeft,
-                                          end: Alignment
-                                              .bottomRight,
-                                          colors: [
-                                            const Color(
-                                                0xFF185a9d),
-                                            const Color(
-                                                0xFF43cea2)
-                                          ],
-                                        ),
-                                        borderRadius:
-                                        BorderRadius.circular(
-                                            20.0),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                            "okay",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .subhead),
-                                      ),
-                                    ),
+                                    child:buttonContainer(context, 'okey', 40, 150)
                                   ),
                                 ),
                               ),
@@ -445,17 +479,13 @@ Widget _customAppBar(
   String catergoryname,
 ) {
   return PreferredSize(
-    preferredSize: Size.fromHeight(12 * SizeConfig.heightMultiplier),
+    preferredSize: Size.fromHeight(60),
     child: Material(
       elevation: 0.0,
       child: Container(
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [const Color(0xFF185a9d), const Color(0xFF43cea2)],
-          ),
+          gradient: linearcolor()
         ),
         child: Padding(
           padding: EdgeInsets.only(
@@ -468,7 +498,10 @@ Widget _customAppBar(
                   flex: 1,
                   child: IconButton(
                     onPressed: () {
-                      UserAccess().authorizedAccess(context);
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Store()));
 
                     },
                     icon: Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -480,7 +513,7 @@ Widget _customAppBar(
                     icon: Icon(
                       Icons.list,
                       color: Colors.white,
-                      size: 5 * SizeConfig.heightMultiplier,
+
                     ),
                     onPressed: () {
                       globalKey.currentState.openDrawer();

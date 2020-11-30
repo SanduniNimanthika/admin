@@ -2,12 +2,18 @@ import 'package:admin/loginsignup/forgotpass.dart';
 import 'package:admin/profile/proflie.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:admin/services/authentication.dart';
+import 'package:flutter/rendering.dart';
+import 'package:admin/mainpages/home.dart';
+
 class Setting extends StatefulWidget {
   @override
   _SettingState createState() => _SettingState();
 }
 
 class _SettingState extends State<Setting> {
+  final AuthService _auth = AuthService();
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -68,6 +74,24 @@ class _SettingState extends State<Setting> {
                   leading: Icon(Icons.vpn_key),
                   title: Text(
                     "Change your password",style: Theme.of(context).textTheme.display1,
+                  ),
+                ),
+              ),
+              Divider(),
+              InkWell(
+                onTap: ()async {
+                  await _auth.signOut(context);
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              Homepage()));
+
+                },
+                child: ListTile(
+                  leading: Icon(Icons.arrow_back),
+                  title: Text(
+                    "Log out",style: Theme.of(context).textTheme.display1,
                   ),
                 ),
               ),

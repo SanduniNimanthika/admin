@@ -1,5 +1,6 @@
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/module/perscriptionOrder.dart';
-import 'package:admin/order/message.dart';
+
 import 'package:admin/order/odertab.dart';
 import 'package:admin/order/sms.dart';
 import 'package:flutter/material.dart';
@@ -64,7 +65,7 @@ class _PerscriptionPreviewState extends State<PerscriptionPreview> {
                       background: Image.network(
                     perscriptionOrderHistoryNotifier
                         .currentPerscriptionOrderHistory.images,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   )),
                 ),
               ];
@@ -75,95 +76,49 @@ class _PerscriptionPreviewState extends State<PerscriptionPreview> {
                 children: <Widget>[
                   Padding(
                     padding: EdgeInsets.only(top: 40.0),
-                    child: ListTile(
-                      leading: Icon(Icons.account_circle),
-                      title: Text(
-                        perscriptionOrderHistoryNotifier
-                            .currentPerscriptionOrderHistory.fullname,
-                        style: Theme.of(context).textTheme.display1,
-                      ),
-                    ),
+                    child:listBar(context,perscriptionOrderHistoryNotifier
+                        .currentPerscriptionOrderHistory.fullname, Icons.account_circle)
+
                   ),
                   Divider(),
                   (perscriptionOrderHistoryNotifier
                               .currentPerscriptionOrderHistory
                               .firstlineaddress !=
                           null)
-                      ? ListTile(
-                          leading: Icon(Icons.home),
-                          title: Text(
-                            perscriptionOrderHistoryNotifier
-                                .currentPerscriptionOrderHistory
-                                .firstlineaddress,
-                            style: Theme.of(context).textTheme.display1,
-                          ),
-                        )
+                      ?listBar(context, perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory
+                      .firstlineaddress,Icons.home)
+
                       : Container(),
                   Divider(),
-                  ListTile(
-                    leading: Icon(Icons.home),
-                    title: Text(
-                      perscriptionOrderHistoryNotifier
-                          .currentPerscriptionOrderHistory.hometown,
-                      style: Theme.of(context).textTheme.display1,
-                    ),
-                  ),
+                  listBar(context, perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory.hometown,Icons.location_on),
+
                   Divider(),
-                  ListTile(
-                    leading: Icon(Icons.phone),
-                    title: Text(
-                      perscriptionOrderHistoryNotifier
-                          .currentPerscriptionOrderHistory.telenumber,
-                      style: Theme.of(context).textTheme.display1,
-                    ),
-                  ),
+                  listBar(context, perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory.telenumber,Icons.phone)
+                  ,
+
                   Divider(),
-                  ListTile(
-                      leading: Icon(Icons.email),
-                      title: (perscriptionOrderHistoryNotifier
-                                  .currentPerscriptionOrderHistory.email !=
-                              null)
-                          ? Text(
-                              perscriptionOrderHistoryNotifier
-                                  .currentPerscriptionOrderHistory.email,
-                              style: Theme.of(context).textTheme.display1,
-                            )
-                          : Text(
-                              "Not provide",
-                              style: Theme.of(context).textTheme.display1,
-                            )),
+                  listBar(context,   perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory.email,Icons.email),
+
                   Divider(),
-                  ListTile(
-                    leading: Icon(Icons.calendar_today),
-                    title: (perscriptionOrderHistoryNotifier
-                                .currentPerscriptionOrderHistory.days
-                                .toString() !=
-                            null)
-                        ? Text(
-                            perscriptionOrderHistoryNotifier
-                                .currentPerscriptionOrderHistory.days
-                                .toString(),
-                            style: Theme.of(context).textTheme.display1,
-                          )
-                        : Text(
-                            "Not provide",
-                            style: Theme.of(context).textTheme.display1,
-                          ),
-                  ),
+                  listBar(context, perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory.days
+                      .toString(), Icons.calendar_today),
+
+
                   Divider(),
                   (perscriptionOrderHistoryNotifier
                               .currentPerscriptionOrderHistory
                               .specialDescription !=
                           null)
-                      ? ListTile(
-                          leading: Icon(Icons.edit),
-                          title: Text(
-                            perscriptionOrderHistoryNotifier
-                                .currentPerscriptionOrderHistory
-                                .specialDescription,
-                            style: Theme.of(context).textTheme.display1,
-                          ),
-                        )
+
+                      ? listBar(context, perscriptionOrderHistoryNotifier
+                      .currentPerscriptionOrderHistory
+                      .specialDescription, Icons.edit)
+
                       : Container(),
                   // button
                   Padding(
@@ -175,113 +130,27 @@ class _PerscriptionPreviewState extends State<PerscriptionPreview> {
                       elevation: 4.0,
                       child: InkWell(
                         onTap: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return Dialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20.0),
-                                  ),
-                                  child: Container(
-                                    height: 170.0,
-                                    child: Column(
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: EdgeInsets.only(top: 20.0),
-                                          child: Text(
-                                            "Send email or message",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .display1,
-                                          ),
-                                        ),
-                                        Padding(
-                                            padding: EdgeInsets.only(
-                                                top: 30.0,
-                                                bottom: 30.0,
-                                                left: 50.0,
-                                                right: 50.0),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: <Widget>[
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _currentPerscriptionOrderHistory.status = 'accepted';
-                                                    });
-                                                    uploadPerscriptionHistory(
-                                                        _currentPerscriptionOrderHistory /*widget.isUpdating*/,
-                                                        _onOrderHistoryUploaded);
+                          {
+                            setState(() {
+                              _currentPerscriptionOrderHistory.status = 'accepted';
+                            });
+                            uploadPerscriptionHistory(
+                                _currentPerscriptionOrderHistory /*widget.isUpdating*/,
+                                _onOrderHistoryUploaded);
 
-                                                    Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                EmailSender(
-                                                                    text: perscriptionOrderHistoryNotifier
-                                                                        .currentPerscriptionOrderHistory
-                                                                        .email)));
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              "https://www.lawforgood.org.uk/wp-content/uploads/2017/09/Email-Icon.png"),
-                                                          fit: BoxFit.fill),
-                                                    ),
-                                                    height: 50,
-                                                    width: 50,
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: (){
-                                                  //  Navigator.push(
-                                                  //      context,
-                                                  //      MaterialPageRoute(
-                                                    //       builder: (context) =>
-                                                      //         Messaage()));
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                      image: DecorationImage(
-                                                          image: NetworkImage(
-                                                              "https://upload.wikimedia.org/wikipedia/commons/thumb/5/51/IMessage_logo.svg/768px-IMessage_logo.svg.png"),
-                                                          fit: BoxFit.fill),
-                                                    ),
-                                                    height: 40,
-                                                    width: 40,
-                                                  ),
-                                                )
-                                              ],
-                                            )),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        EmailSender(
+                                            text: perscriptionOrderHistoryNotifier
+                                                .currentPerscriptionOrderHistory
+                                                .email)));
+                          }
+
                         },
-                        child: Container(
-                          height: 40,
-                          width: 15 * SizeConfig.heightMultiplier,
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topLeft,
-                              end: Alignment.bottomRight,
-                              colors: [
-                                const Color(0xFF185a9d),
-                                const Color(0xFF43cea2)
-                              ],
-                            ),
-                            borderRadius: BorderRadius.circular(
-                                5 * SizeConfig.heightMultiplier),
-                          ),
-                          child: Center(
-                            child: Text("Submit",
-                                style: Theme.of(context).textTheme.subhead),
-                          ),
-                        ),
+                        child: buttonContainer(context,'Accpeted & Send a email', 43, null)
+
                       ),
                     ),
                   ),

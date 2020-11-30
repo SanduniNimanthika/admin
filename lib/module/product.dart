@@ -8,11 +8,12 @@ class Product {
   double price;
   String description;
   String images;
-  String productsearchkey;
   double offer;
   double offerprice;
   String catergorykey;
   String subcatergorykey;
+  double cardprice;
+  bool capsualtype;
 
   Product(
       {this.productkey,
@@ -23,14 +24,15 @@ class Product {
       this.quntity,
       this.price,
       this.description,
-      this.images, this.productsearchkey,this.offer,this.offerprice,this.catergorykey,this.subcatergorykey});
+      this.images,this.offer,this.offerprice,this.catergorykey,this.subcatergorykey,this.cardprice,
+      this.capsualtype});
 
 
 
 
   Product.fromMap(Map<String, dynamic> data) {
     productkey = data['uid'];
-    productsearchkey= data['productsearchkey'];
+
     catergory=data['catergory'];
     subcatergory=data['subcatergory'];
     productname=data['productname'];
@@ -43,12 +45,14 @@ class Product {
      offerprice=data['offerprice'];
      catergorykey=data['catergorykey'];
      subcatergorykey=data['subcatergorykey'];
+     cardprice=data['cardprice'];
+     capsualtype=data['capsualtype'];
   }
 
  Map<String, dynamic> toMap() {
     return {
       'uid': productkey,
-       'productsearchkey':productsearchkey,
+
       'productname': productname,
       'catergory': catergory,
     'subcatergory':subcatergory,
@@ -61,6 +65,8 @@ class Product {
       'offerprice':offerprice,
       'catergorykey':catergorykey,
       'subcatergorykey':subcatergorykey,
+      'cardprice':cardprice,
+      'capsualtype':capsualtype
     };
  }
 }

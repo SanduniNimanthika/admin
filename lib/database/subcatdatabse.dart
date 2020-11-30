@@ -13,18 +13,21 @@ class SubCatergoryService {
   final CollectionReference subcatergoryCollection =
       Firestore.instance.collection('SubCatergory');
 
-  Future createSubCatData(String subcatergory, String catergory,
-      String subcatergorysearchkey,String catergorykey) async {
+  Future createSubCatData(String subcatergory, String catergory,String catergorykey) async {
     String id = subcatergoryCollection.document().documentID;
     return await subcatergoryCollection.document(id).setData({
       'uid': id,
       'subcatergory': subcatergory,
       'catergory': catergory,
-      'subcatergorysearchkey': subcatergorysearchkey,
+
       'catergorykey':catergorykey
     });
   }
 
+  Future <List<DocumentSnapshot>>getSuggestions(String suggestion)=>
+      subcatergoryCollection.where('subcatergory',isGreaterThanOrEqualTo: suggestion).getDocuments().then((snap){
+        return snap.documents;
+      });
 }
 
 

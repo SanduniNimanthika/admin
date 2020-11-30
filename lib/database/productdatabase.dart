@@ -28,11 +28,13 @@ class ProductService {
       double price,
       String images,
       String description,
-      String productsearchkey,
+
       double offer,
       double offerprice,
       String catergorykey,
-      String subcatergorykey) async {
+      String subcatergorykey,
+      double cardprice,
+      bool capsualtype) async {
     String id = productCollection.document().documentID;
     return await productCollection.document(id).setData({
       'uid': id,
@@ -44,13 +46,20 @@ class ProductService {
       'price': price,
       'images': images,
       'description': description,
-      ' productsearchkey': productsearchkey,
+
       'offer':offer,
       'offerprice':offerprice,
       'catergorykey':catergorykey,
       'subcatergorykey':subcatergorykey,
+      'cardprice':cardprice,
+      'capsualtype':capsualtype
     });
   }
+  Future <List<DocumentSnapshot>>getSuggestions(String suggestion)=>
+      productCollection.where('productname',isGreaterThanOrEqualTo: suggestion).getDocuments().then((snap){
+        return snap.documents;
+      });
+
 }
 
 getProducts(ProductNotifier productNotifier) async {

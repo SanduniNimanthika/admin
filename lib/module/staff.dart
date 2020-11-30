@@ -10,4 +10,25 @@ class Staff{
 
 
   Staff({this.staffkey,this.role,this.email,this.fullname,this.address,this.telenumber});
+
+  Staff.fromMap(Map<String, dynamic> data) {
+   staffkey=data['uid'];
+   role= data['role'];
+   email=data['email'];
+   fullname=data['fullname'];
+   address=data['address'];
+   telenumber=data['telenumber'];
+
+  }
+
+  Map<String, dynamic> toMap() {
+   return {
+    'uid':staffkey,
+    'email':email,
+    'role':role,
+    'fullname':fullname,
+    'address':address,
+    'telenumber':telenumber,
+   };
+  }
 }

@@ -1,3 +1,6 @@
+import 'package:admin/StaffDetails/searchstaff.dart';
+import 'package:admin/UserDetail/ordertab.dart';
+import 'package:admin/order/odertab.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,14 +12,16 @@ import 'package:admin/services/usermanagment.dart';
 
 class UserDetail extends StatefulWidget {
   final String useruid;
-  UserDetail({Key key, @required this.useruid}) : super(key: key);
+  final String back;
+  UserDetail({Key key, @required this.useruid,@required this.back}) : super(key: key);
   @override
-  _UserDetailState createState() => _UserDetailState(useruid: useruid);
+  _UserDetailState createState() => _UserDetailState(useruid: useruid,back: back);
 }
 
 class _UserDetailState extends State<UserDetail> {
   final String useruid;
-  _UserDetailState({Key key, @required this.useruid});
+  final String back;
+  _UserDetailState({Key key, @required this.useruid,@required this.back});
   final DatabaseServiceUser databaseServiceUser = DatabaseServiceUser();
   @override
   Widget build(BuildContext context) {
@@ -50,8 +55,11 @@ class _UserDetailState extends State<UserDetail> {
                                   color: Colors.grey,
                                 ),
                                 onPressed: () {
-                                  UserManagment().authorizedAccess(context);
-                                },
+                                  if(back=='order'){
+                                    return Navigator.of(context).push(MaterialPageRoute(builder: (context)=>OrderTab()));
+                                  }else{ return
+                                  Navigator.of(context).push(MaterialPageRoute(builder: (context)=>StaffSearch(search: null)));
+                                    }}
                               ),
                               backgroundColor: Colors.transparent,
                               elevation: 0,
@@ -69,14 +77,7 @@ class _UserDetailState extends State<UserDetail> {
                                         width:
                                         MediaQuery.of(context).size.width,
                                         decoration: BoxDecoration(
-                                          gradient: LinearGradient(
-                                            begin: Alignment.topLeft,
-                                            end: Alignment.bottomRight,
-                                            colors: [
-                                              const Color(0xFF185a9d),
-                                              const Color(0xFF43cea2)
-                                            ],
-                                          ),
+                                          gradient: linearcolor()
                                         ),
                                         child: Center(
                                           child: Container(
@@ -102,6 +103,8 @@ class _UserDetailState extends State<UserDetail> {
                                     Icons.account_circle)),
                             Divider(),
                             listBar(context, profile.address, Icons.home),
+                            Divider(),
+                            listBar(context, profile.hometown, Icons.location_on),
 
                             Divider(),
                             listBar(context, profile.telenumber, Icons.phone),
@@ -119,6 +122,7 @@ class _UserDetailState extends State<UserDetail> {
                                 elevation: 4.0,
                                 child: InkWell(
                                     onTap: () {
+                                        Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Tabcontroller(selectedPage: 1,useremail:profile.email,useruid:useruid)));
 
                                     },
                                     child: buttonContainer(

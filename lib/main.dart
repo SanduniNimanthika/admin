@@ -10,6 +10,8 @@ import 'package:admin/notifer/subcatergorynotifier.dart';
 import 'package:admin/notifer/catergorynotifer.dart';
 import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/notifer/oderhistorynotifer.dart';
+import 'package:admin/notifer/staffnotifer.dart';
+import 'package:admin/notifer/usernotifer.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -33,6 +35,12 @@ class MyApp extends StatelessWidget {
                   ),
                   ChangeNotifierProvider(
                     create: (context) => PerscriptionOrderHistoryNotifier(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => StaffNotifier(),
+                  ),
+                  ChangeNotifierProvider(
+                    create: (context) => UserNotifier(),
                   ),
 
             ChangeNotifierProvider(

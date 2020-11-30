@@ -1,3 +1,6 @@
+import 'package:admin/Dashborad/Admindashbord.dart';
+import 'package:admin/StaffDetails/searchstaff.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +28,7 @@ class _SignupState extends State<Signup> {
   String password = '';
   String telenumber = '';
   String confirmpassword = '';
-  String role = '';
+  String role = 'staff';
 
   bool _showPassword = false;
 
@@ -65,14 +68,7 @@ class _SignupState extends State<Signup> {
                             height: MediaQuery.of(context).size.height,
                             width: MediaQuery.of(context).size.width,
                             decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color(0xFF185a9d),
-                                  const Color(0xFF43cea2)
-                                ],
-                              ),
+                              gradient: linearcolor()
                             ),
                           ),
                         ),
@@ -84,8 +80,10 @@ class _SignupState extends State<Signup> {
                               color: Colors.white,
                             ),
                             onPressed: () {
-                              UserManagment().authorizedAccess(context);
-                            },
+    Navigator.push(
+    context,
+    MaterialPageRoute(
+    builder: (context) => AdminPanel()));}
                           ),
                         ),
                         Container(
@@ -106,61 +104,24 @@ class _SignupState extends State<Signup> {
                                     child: Container(
                                       child: new Center(
                                           child: new TextFormField(
-                                              decoration: new InputDecoration(
-                                                labelText: "Email",
-                                                prefixIcon: Icon(Icons.email,
-                                                    color: Colors.blueGrey),
-                                                labelStyle: Theme.of(context)
-                                                    .textTheme
-                                                    .display1,
-                                                fillColor: Colors.white,
-                                                filled: true,
-                                                focusedBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      new BorderRadius.circular(
-                                                          22.0),
-                                                ),
-                                                enabledBorder:
-                                                    OutlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Color(0xFF185a9d),
-                                                      style: BorderStyle.solid,
-                                                      width: 1),
-                                                  borderRadius:
-                                                      new BorderRadius.circular(
-                                                          22.0),
-                                                ),
-                                              ),
-                                              validator: (input) => input
-                                                      .isEmpty
-                                                  ? 'Please type your email here'
-                                                  : null,
-                                              onChanged: (input) {
+                                              decoration:inputDecaration(context, "Email", Icons.email),
+
+                                              validator: (input)=>input.isEmpty?'Please type your email here':null,
+                                              onChanged: (input){
                                                 setState(() {
-                                                  email = input;
+                                                  email=input;
                                                 });
                                               },
-                                              keyboardType:
-                                                  TextInputType.emailAddress,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .display1)),
+                                              keyboardType: TextInputType.emailAddress,
+                                              style: Theme.of(context).textTheme.display1
+                                          )
+                                      ),
                                     ),
                                   ),
-                                  Center(
-                                      child: Text(
-                                    error,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .display1
-                                        .copyWith(
-                                            color: Colors.red, fontSize: 15),
-                                  )),
+
+                                  // password
+
+
 
                                   // password
                                   Padding(
@@ -174,6 +135,8 @@ class _SignupState extends State<Signup> {
                                           child: new TextFormField(
                                             controller: _pass,
                                             decoration: new InputDecoration(
+                                              errorStyle:Theme.of(context).textTheme.display1.copyWith(color: Colors.red,
+                                                  fontSize: 12.0) ,
                                               labelText: "Password",
                                               prefixIcon: Icon(Icons.vpn_key,
                                                   color: Colors.blueGrey),
@@ -198,36 +161,19 @@ class _SignupState extends State<Signup> {
                                                     color: Color(0xFF185a9d),
                                                     style: BorderStyle.solid,
                                                     width: 1),
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        22.0),
+
                                               ),
                                               enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Color(0xFF185a9d),
                                                     style: BorderStyle.solid,
                                                     width: 1),
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        22.0),
+
                                               ),
                                             ),
-                                            validator: (input) {
-                                              Pattern pattern =
-                                                  r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{6,}$';
-                                              RegExp regex =
-                                                  new RegExp(pattern);
-                                              if (input.length < 6) {
-                                                return 'Your password needs to be at least 6 characters';
-                                              } else {
-                                                if (!regex.hasMatch(input))
-                                                  return 'Your password should contain at least one upper case,\n'
-                                                      ' one lower case'
-                                                      ' and one digit';
-                                                else
-                                                  return null;
-                                              }
-                                            },
+                                              validator: (input) => input.length<6
+                                                  ? 'Please type password with six character here'
+                                                  : null,
                                             onChanged: (input) {
                                               setState(() {
                                                 password = input;
@@ -280,18 +226,14 @@ class _SignupState extends State<Signup> {
                                                     color: Color(0xFF185a9d),
                                                     style: BorderStyle.solid,
                                                     width: 1),
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        22.0),
+
                                               ),
                                               enabledBorder: OutlineInputBorder(
                                                 borderSide: BorderSide(
                                                     color: Color(0xFF185a9d),
                                                     style: BorderStyle.solid,
                                                     width: 1),
-                                                borderRadius:
-                                                    new BorderRadius.circular(
-                                                        22.0),
+
                                               ),
                                             ),
                                             validator: (input) =>
@@ -359,6 +301,7 @@ class _SignupState extends State<Signup> {
                                     ],
                                   ),
 
+
                                   // button
                                   Padding(
                                     padding: EdgeInsets.only(
@@ -369,136 +312,129 @@ class _SignupState extends State<Signup> {
                                       borderRadius: BorderRadius.circular(20.0),
                                       elevation: 4.0,
                                       child: InkWell(
-                                        onTap: () async {
+                                        onTap: () async{
+                                          print(role);
                                           if (_formKey.currentState
                                               .validate()) {
                                             setState(() {
                                               loading = true;
                                             });
-                                            dynamic result = await _auth
-                                                .registerWithEmailAndPassword(
-                                                    email,
-                                                    password,
-                                                    role,
-                                                    context);
-                                            showDialog(
-                                                context: context,
-                                                builder: (context) {
-                                                  return Dialog(
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              20.0),
-                                                    ),
-                                                    child: Container(
-                                                      height: 150.0,
-                                                      child: Column(
-                                                        children: <Widget>[
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.only(
-                                                                    top: 20.0),
-                                                            child: Text(
-                                                              "Account is created",
-                                                              style: Theme.of(
-                                                                      context)
-                                                                  .textTheme
-                                                                  .display1,
-                                                            ),
-                                                          ),
-                                                          Padding(
-                                                            padding:
-                                                                EdgeInsets.all(
-                                                                    30.0),
-                                                            child: Material(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20.0),
-                                                              elevation: 4.0,
-                                                              child: InkWell(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            20.0),
-                                                                onTap: () {
-                                                                  Navigator
-                                                                      .pushReplacement(
-                                                                    context,
-                                                                    MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                Homepage()),
-                                                                  );
-                                                                },
-                                                                child:
-                                                                    Container(
-                                                                  height: 40.0,
-                                                                  width: 100.0,
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    gradient:
-                                                                        LinearGradient(
-                                                                      begin: Alignment
-                                                                          .topLeft,
-                                                                      end: Alignment
-                                                                          .bottomRight,
-                                                                      colors: [
-                                                                        const Color(
-                                                                            0xFF185a9d),
-                                                                        const Color(
-                                                                            0xFF43cea2)
-                                                                      ],
-                                                                    ),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            20.0),
-                                                                  ),
-                                                                  child: Center(
-                                                                    child: Text(
-                                                                        "okay",
-                                                                        style: Theme.of(context)
-                                                                            .textTheme
-                                                                            .subhead),
-                                                                  ),
-                                                                ),
+
+
+                                            dynamic result =  await _auth
+                                                  .registerWithEmailAndPassword(
+                                                  email,
+                                                  password,
+                                                  role,
+                                                  context);
+
+                                            if (result==null){
+                                              setState(() {
+                                                loading=false;}
+                                              );}else{
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return Dialog(
+                                                      shape:
+                                                      RoundedRectangleBorder(
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            20.0),
+                                                      ),
+                                                      child: Container(
+                                                        height: 150.0,
+                                                        child: Column(
+                                                          children: <
+                                                              Widget>[
+                                                            Padding(
+                                                              padding: EdgeInsets
+                                                                  .only(
+                                                                  top: 20.0),
+                                                              child:
+                                                              Text(
+                                                                "Account is created",
+                                                                style: Theme.of(context)
+                                                                    .textTheme
+                                                                    .display1,
                                                               ),
                                                             ),
-                                                          ),
-                                                        ],
+                                                            Padding(
+                                                              padding:
+                                                              EdgeInsets.all(
+                                                                  30.0),
+                                                              child:
+                                                              Material(
+                                                                borderRadius:
+                                                                BorderRadius.circular(20.0),
+                                                                elevation:
+                                                                4.0,
+                                                                child: InkWell(
+                                                                    borderRadius: BorderRadius.circular(20.0),
+                                                                    onTap: () {
+                                                                      UserManagment().authorizedAccess(context);
+                                                                    },
+                                                                    child: buttonContainer(context, "okay", 43.0, 100.0)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
                                                       ),
-                                                    ),
-                                                  );
-                                                });
+                                                    );
+                                                  });
+                                            }
 
-                                            if (result == null) {
+
+                                             if (loading==false){
                                               setState(() {
-                                                error =
-                                                    "please supply a vaild email";
-                                                loading = false;
+                                                error='Please check your email and password';
                                               });
                                             }
-                                          }
-                                        },
-                                        child: Container(
-                                          height: 40,
-                                          decoration: BoxDecoration(
-                                            color: Color(0xFF185a9d),
 
-                                            borderRadius:
-                                                BorderRadius.circular(20.0),
-                                          ),
-                                          child: Center(
-                                            child: Text("Sign up",
-                                                style: Theme.of(context)
-                                                    .textTheme
-                                                    .subhead),
-                                          ),
-                                        ),
+
+
+                                          }
+
+                                        },
+                                        child: buttonContainerWithBlue(context, "Sign up", 43, null)
+
                                       ),
                                     ),
                                   ),
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 2,
+                                        child: Text('Already staff have account?',style:Theme.of(context)
+                                            .textTheme
+                                            .subhead,),
+                                      ),
+                                      Expanded(
+                                        flex: 1,
+                                        child: InkWell(
+                                          onTap: (){
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        StaffSearch(search: 'staff')));
+                                          },
+                                          child: Text('Search Staff',style:Theme.of(context)
+                                              .textTheme
+                                              .subhead.copyWith(color:Color(
+                                              0xFF185a9d ),fontWeight: FontWeight.bold)
+                                    ,
+                                          ) ),
+                                      )],
+                                  ),
+                                  SizedBox(
+                                    height: 12,
+                                  ),
+                                  Center(child: Text(error,style: Theme.of(context).textTheme.display1.copyWith(color: Colors.red,fontSize: 15),)),
+
+
+
                                 ],
                               ),
                             ),

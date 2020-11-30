@@ -1,3 +1,5 @@
+import 'package:admin/UserDetail/userDetail.dart';
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/module/oderhistory.dart';
 import 'package:admin/order/odertab.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -8,7 +10,8 @@ import 'package:admin/notifer/oderhistorynotifer.dart';
 import 'package:admin/notifer/productnotifer.dart';
 import 'package:admin/database/oderhistory.dart';
 import 'package:provider/provider.dart';
-import 'package:admin/commanpages/configue.dart';
+import 'package:admin/services/usermanagment.dart';
+
 
 class ProductOrder extends StatefulWidget {
   @override
@@ -122,11 +125,7 @@ class _ProductOrderState extends State<ProductOrder> {
                             shadowColor: Colors.greenAccent,
                             child: Container(
                                 height: MediaQuery.of(context).size.height / 9 * 2,
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.rectangle,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(25.0),
-                                        bottomRight: Radius.circular(25.0))),
+                                decoration:boxDecarationhistory(),
                                 child: Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Row(
@@ -134,12 +133,7 @@ class _ProductOrderState extends State<ProductOrder> {
                                       Expanded(
                                         flex: 2,
                                         child: Container(
-                                            decoration: BoxDecoration(
-                                                shape: BoxShape.rectangle,
-                                                borderRadius: BorderRadius.only(
-                                                    topLeft: Radius.circular(25.0),
-                                                    bottomRight:
-                                                        Radius.circular(25.0))),
+                                            decoration: boxDecarationhistory(),
                                             width:
                                                 MediaQuery.of(context).size.width / 3,
                                             height:
@@ -183,7 +177,7 @@ class _ProductOrderState extends State<ProductOrder> {
                                                       .subhead
                                                       .copyWith(
                                                           color: Color(0xFF185a9d),
-                                                          fontSize: 20.0),
+                                                          ),
                                                 ),
                                               ),
                                               Expanded(
@@ -300,7 +294,7 @@ class _EditState extends State<Edit> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                        left: 15.0, right: 15.0, top: 5.0, bottom: 15.0),
+                        left: 15.0, right: 15.0, top: 7.0, bottom: 15.0),
                     child: Row(
                       children: <Widget>[
                         Expanded(
@@ -350,7 +344,7 @@ class _EditState extends State<Edit> {
                           flex: 2,
                           child: Padding(
                             padding: EdgeInsets.only(
-                              right: 15.0,
+                              right: 5.0,
                             ),
                             child: Text('Required Qty:',
                                 style: Theme.of(context)
@@ -414,7 +408,7 @@ class _EditState extends State<Edit> {
                         left: 15.0, top: 15.0, bottom: 15.0),
                     child: Text("User Details",
                         style: Theme.of(context).textTheme.subtitle
-                        //.copyWith(fontSize: 29),
+                        .copyWith(fontSize: 19),
                         ),
                   ),
                   Padding(
@@ -443,12 +437,16 @@ class _EditState extends State<Edit> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Text(
-                                  productOrderHistoryNotifier
-                                      .currentProductOrderHistory.fullname,
+                                  '${productOrderHistoryNotifier
+                                      .currentProductOrderHistory.fullname},',
+                                  style: Theme.of(context).textTheme.display1),
+                              Text(
+                                  '${productOrderHistoryNotifier
+                                      .currentProductOrderHistory.address},',
                                   style: Theme.of(context).textTheme.display1),
                               Text(
                                   productOrderHistoryNotifier
-                                      .currentProductOrderHistory.address,
+                                      .currentProductOrderHistory.hometown,
                                   style: Theme.of(context).textTheme.display1),
                             ],
                           ),
@@ -465,7 +463,7 @@ class _EditState extends State<Edit> {
                           flex: 2,
                           child: Padding(
                             padding: EdgeInsets.only(
-                              right: 15.0,
+                              right: 5.0,
                             ),
                             child: Text('Telephone No:',
                                 style: Theme.of(context)
@@ -492,6 +490,10 @@ class _EditState extends State<Edit> {
                       padding: EdgeInsets.only(
                           left: 15.0, right: 15.0, bottom: 15.0),
                       child: InkWell(
+                        onTap: (){
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context)=>UserDetail(useruid: productOrderHistoryNotifier
+                              .currentProductOrderHistory.userkey,back:'order')));
+                        },
                         child: Text("more...",
                             style:
                                 Theme.of(context).textTheme.display1.copyWith(
@@ -503,7 +505,7 @@ class _EditState extends State<Edit> {
                     child: Center(
                       child: Material(
                         borderRadius: BorderRadius.circular(
-                            2 * SizeConfig.heightMultiplier),
+                            20),
                         elevation: 7.0,
                         child: InkWell(
                           onTap: () async {
@@ -538,28 +540,11 @@ class _EditState extends State<Edit> {
                             uploadOrderHistory(
                                 _currentProductOrderHistory /*widget.isUpdating*/,
                                 _onOrderHistoryUploaded);
-                            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> OrderTab()), (route)=>false);
+                            UserManagment().authorizedAccess(context);
+
                           },
-                          child: Container(
-                            height: 6.7 * SizeConfig.heightMultiplier,
-                            width: 29 * SizeConfig.heightMultiplier,
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  const Color(0xFF185a9d),
-                                  const Color(0xFF43cea2)
-                                ],
-                              ),
-                              borderRadius: BorderRadius.circular(
-                                  2 * SizeConfig.heightMultiplier),
-                            ),
-                            child: Center(
-                              child: Text("Accept",
-                                  style: Theme.of(context).textTheme.subhead),
-                            ),
-                          ),
+                          child: buttonContainer(context, 'Accept', 43, 200)
+
                         ),
                       ),
                     ),
