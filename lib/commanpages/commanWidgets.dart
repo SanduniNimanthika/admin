@@ -36,11 +36,7 @@ Widget buttonContainerWithBlue(BuildContext context,String name,double height,do
     decoration:  BoxDecoration(
         color: Color(0xFF185a9d),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-            color:Colors.white,
-            style: BorderStyle.solid,
-            width: 2.0
-        )
+
     ),
     child: Center(
       child: Text(name,

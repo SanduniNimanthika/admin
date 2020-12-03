@@ -61,14 +61,7 @@ class _SigninState extends State<Signin> {
 
                   ),
                 ),
-                Padding(
-                  padding:  EdgeInsets.only(left: 15.0,top: 8.0),
-                  child: IconButton(icon: Icon(Icons.close,color: Colors.white,),
-                    onPressed: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>Homepage()));
 
-                    },),
-                ),
                 Container(
                   child: Form(
                     key: _formKey,

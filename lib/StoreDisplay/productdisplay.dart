@@ -192,107 +192,157 @@ class _ProductDisplayState extends State<ProductDisplay> {
                           });
                         },
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0, top: 25.0),
-                                child: Text(
-                                  productNotifier.currentProduct.productname,
-                                  style: Theme.of(context).textTheme.subtitle,
+                          Padding(
+                            padding: const EdgeInsets.only( right: 25,
+                                left: 25.0, top: 25.0),
+                            child: Column(
+                              children: <Widget>[
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                       top: 25.0),
+                                  child: Text(
+                                    productNotifier.currentProduct.productname,
+                                    style: Theme.of(context).textTheme.subtitle,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15.0, right: 15.0, top: 8.0),
-                                child: Text(
-                                  'By ${productNotifier.currentProduct.catergory}',
-                                  style: Theme.of(context).textTheme.display1,
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0),
+                                  child: Text(
+                                    'By ${productNotifier.currentProduct.catergory}',
+                                    style: Theme.of(context).textTheme.display1,
+                                  ),
                                 ),
-                              ),
-                              Padding(
-                                padding: EdgeInsets.only(
-                                    left: 15.0, right: 15.0, top: 35.0),
-                                child: (productNotifier
-                                            .currentProduct.offerprice ==
-                                        0)
-                                    ? Row(
-                                        children: <Widget>[
-                                          Text('Product Price :',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .display1
-                                                  .copyWith(fontSize: 19.0)),
-                                          Text(
-                                              'Rs. ${productNotifier.currentProduct.price.toString()}',
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .display1
-                                                  .copyWith(fontSize: 19.0)),
-                                        ],
-                                      )
-                                    : Column(
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              Text('New Price : ',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .display1),
-                                              Text(
-                                                'Rs.${productNotifier.currentProduct.offerprice.toString()}',
+                                (productNotifier.currentProduct.capsualtype==true)?Padding(
+                                  padding:  const EdgeInsets.only(
+                                    top: 15.0),
+                                  child: Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      'Box Prices(Capsual)',
+                                      style: Theme.of(context).textTheme.subtitle.copyWith(fontSize: 16),
+                                    ),
+                                  ),
+                                ):Container(),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: 15.0),
+                                  child: (productNotifier
+                                              .currentProduct.offerprice ==
+                                          0)
+                                      ? Row(
+                                          children: <Widget>[
+                                            Text('Product Price :',
                                                 style: Theme.of(context)
                                                     .textTheme
                                                     .display1
-                                                    .copyWith(
-                                                        color: Colors.red),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(height: 15),
-                                          Row(
-                                            children: <Widget>[
-                                              Text('Old Price : ',
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .display1),
-                                              Text(
-                                                  'Rs.${productNotifier.currentProduct.price.toString()}',
+                                                    ),
+                                            Text(
+                                                'Rs. ${productNotifier.currentProduct.price.toString()}',
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .display1
+                                                    .copyWith(fontSize: 19.0)),
+                                          ],
+                                        )
+                                      : Column(
+                                          children: <Widget>[
+                                            Row(
+                                              children: <Widget>[
+                                                Text('New Price : ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .display1),
+                                                Text(
+                                                  'Rs.${productNotifier.currentProduct.offerprice.toString()}',
                                                   style: Theme.of(context)
                                                       .textTheme
                                                       .display1
                                                       .copyWith(
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .lineThrough)),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Row(
-                                  children: <Widget>[
-                                    Text("In Stock :  ",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display1),
-                                    Text(
-                                        productNotifier.currentProduct.quntity
-                                            .toString(),
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .display1
-                                            .copyWith(color: Colors.red)),
-                                  ],
+                                                          color: Colors.red),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 15),
+                                            Row(
+                                              children: <Widget>[
+                                                Text('Old Price : ',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .display1),
+                                                Text(
+                                                    'Rs.${productNotifier.currentProduct.price.toString()}',
+                                                    style: Theme.of(context)
+                                                        .textTheme
+                                                        .display1
+                                                        .copyWith(
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .lineThrough)),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                 ),
-                              ),
-                              Divider(
-                                color: Colors.blueGrey,
-                                thickness: .3,
-                              ),
-                            ],
+                                (productNotifier.currentProduct.capsualtype==true)?Padding(
+                                  padding:  const EdgeInsets.only( top: 25.0,bottom: 25),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Text(
+                                        'Card Prices(Capsual)',
+                                        style: Theme.of(context).textTheme.subtitle.copyWith(fontSize: 16),
+                                      ),
+                                      Padding(
+                                          padding: EdgeInsets.only(
+                                           top: 15.0),
+                                          child:
+                                          Row(
+                                            children: <Widget>[
+                                              Text('Product Card Price :',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .display1
+                                              ),
+                                              Text(
+                                                  'Rs. ${productNotifier.currentProduct.cardprice.toString()}',
+                                                  style: Theme.of(context)
+                                                      .textTheme
+                                                      .display1
+                                              ),
+                                            ],
+                                          )
+
+
+                                      ),
+                                    ],
+                                  ),
+                                ):Container(),
+
+                                Padding(
+                                  padding: const EdgeInsets.only(top:25.0 ),
+                                  child: Row(
+                                    children: <Widget>[
+                                      Text("In Stock :  ",
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .display1),
+                                      Text(
+                                          productNotifier.currentProduct.quntity
+                                              .toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .display1
+                                              .copyWith(color: Colors.red)),
+                                    ],
+                                  ),
+                                ),
+                                Divider(
+                                  color: Colors.blueGrey,
+                                  thickness: .3,
+                                ),
+                              ],
+                            ),
                           ),
 
                           // second page

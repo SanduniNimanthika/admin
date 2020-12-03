@@ -1,4 +1,6 @@
+import 'package:admin/commanpages/commanWidgets.dart';
 import 'package:admin/loginsignup/forgotpass.dart';
+import 'package:admin/mainpages/landing.dart';
 import 'package:admin/profile/proflie.dart';
 import 'package:admin/services/usermanagment.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:admin/services/authentication.dart';
 import 'package:flutter/rendering.dart';
 import 'package:admin/mainpages/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:admin/database/staffdatabase.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -37,8 +41,8 @@ class _SettingState extends State<Setting> {
 
                 flexibleSpace: FlexibleSpaceBar(
 
-                    background: Image.network(
-                      "http://www.oecd.org/media/oecdorg/directorates/directorateforsciencetechnologyandindustry/digital/privacy_200674785-391x250.jpeg",
+                    background: Image.asset(
+                      "images/dashbord/privacy_200674785-391x250.jpeg",
                       fit: BoxFit.cover,
                     )),
               ),
@@ -54,12 +58,8 @@ class _SettingState extends State<Setting> {
                         context,
                         MaterialPageRoute(builder: (context) => Myaccount()));
                   },
-                  child: ListTile(
-                    leading: Icon(Icons.account_circle),
-                    title: Text(
-                      "Update your personal inflormation",style: Theme.of(context).textTheme.display1,
-                    ),
-                  ),
+                  child:listBar(context,  "Update your personal inflormation", Icons.account_circle)
+
                 ),
               ),
               Divider(),
@@ -70,40 +70,143 @@ class _SettingState extends State<Setting> {
                    //   MaterialPageRoute(
                    //   builder: (context) => Forgotpass()));
                 },
-                child: ListTile(
-                  leading: Icon(Icons.vpn_key),
-                  title: Text(
-                    "Change your password",style: Theme.of(context).textTheme.display1,
-                  ),
-                ),
+                child: listBar(context,  "Change your password", Icons.vpn_key)
+
               ),
               Divider(),
               InkWell(
                 onTap: ()async {
                   await _auth.signOut(context);
+
                   Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
                           builder: (BuildContext context) =>
-                              Homepage()));
+                              LandingPage()));
 
                 },
-                child: ListTile(
-                  leading: Icon(Icons.arrow_back),
-                  title: Text(
-                    "Log out",style: Theme.of(context).textTheme.display1,
-                  ),
-                ),
+                child:listBar(context, "Log out", Icons.arrow_back)
+
               ),
               Divider(),
               InkWell(
-                child: ListTile(
-                  leading: Icon(Icons.delete_forever),
-                  title: Text(
-                    "Delete your account",style: Theme.of(context).textTheme.display1,
-                  ),
-                ),
-              ),
+                  onTap: () async {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return Dialog(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            elevation: 0.0,
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(20.0),
+                              child: SingleChildScrollView(
+                                child: Container(
+                                    color: Color(0xFFE3F2FD),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Column(children: <Widget>[
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 20.0, bottom: 20.0),
+                                          child: Text('Delete Account',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle),
+                                        ),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 10.0, bottom: 20.0),
+                                          child: Text(
+                                              'After you delete an account, it\'s permanently deleted. Accounts can\'t be undeleted.',
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .display1
+                                                  .copyWith(
+                                                  color: Colors.red)),
+                                        ),
+                                        Padding(
+                                          padding:
+                                          EdgeInsets.only(bottom: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                            MainAxisAlignment
+                                                .spaceBetween,
+                                            children: <Widget>[
+                                              Material(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20),
+                                                elevation: 7.0,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                  child:buttonContainerWithBlue(context,"Back", 43,100)
+
+                                                ),
+                                              ),
+                                              Material(
+                                                borderRadius:
+                                                BorderRadius.circular(
+                                                    20),
+                                                elevation: 7.0,
+                                                child: InkWell(
+                                                  onTap: () async {
+                                                    FirebaseUser user =
+                                                    await FirebaseAuth
+                                                        .instance
+                                                        .currentUser();
+                                                    await DatabaseService(
+                                                        uid: user.uid)
+                                                        .deleteuser();
+                                                    user.delete();
+
+                                                    Navigator.pushReplacement(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (BuildContext context) =>
+                                                                LandingPage()));
+
+
+
+                                                  },
+                                                  child: Container(
+                                                    height: 40,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.red,
+                                                        borderRadius:
+                                                        BorderRadius
+                                                            .circular(
+                                                            20),
+                                                        ),
+                                                    child: Center(
+                                                      child: Text("Delete",
+                                                          style: Theme.of(
+                                                              context)
+                                                              .textTheme
+                                                              .subhead
+                                                              .copyWith(
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ]),
+                                    )),
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  child:listBar(context,  "Delete your Account", Icons.delete)),
+
               Divider(),
             ],
           )

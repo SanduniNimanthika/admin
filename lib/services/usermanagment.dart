@@ -28,10 +28,12 @@ class UserManagment{
       then((docs){
         if (docs.documents[0].exists) {
           if (docs.documents[0].data['role'] == 'admin'){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AdminPanel()), (route)=>false);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AdminPanel()));
+
           }else{
             if(docs.documents[0].data['role']=='staff'){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>StaffPanel()), (route)=>false);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>StaffPanel()));
+
           }}
         }
       });
@@ -275,7 +277,8 @@ class UserAccessProductEdit{
       then((docs){
         if (docs.documents[0].exists) {
           if (docs.documents[0].data['role'] == 'admin'){
-            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>AddProduct(text: 'updating')), (route)=>false);
+            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AddProduct(text: 'updating')));
+
           }else{
             if(docs.documents[0].data['role']=='staff'){
               showDialog(
