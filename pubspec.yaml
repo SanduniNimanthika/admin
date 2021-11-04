@@ -25,7 +25,7 @@ dependencies:
   cupertino_icons: ^0.1.2
   cloud_firestore:
   firebase_auth: ^0.16.1
-  provider: ^3.1.0
+  provider: ^4.0.0
   image_picker: ^0.6.6+1
   firebase_storage: ^3.1.5
   flutter_typeahead: ^1.8.7

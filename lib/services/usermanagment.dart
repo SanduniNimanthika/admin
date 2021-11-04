@@ -28,13 +28,12 @@ class UserManagment{
       then((docs){
         if (docs.documents[0].exists) {
           if (docs.documents[0].data['role'] == 'admin'){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context)=>AdminPanel()));
 
+            Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> AdminPanel()), (route)=>false);
           }else{
             if(docs.documents[0].data['role']=='staff'){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context)=>StaffPanel()));
-
-          }}
+              Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>StaffPanel()), (route)=>false);
+            }}
         }
       });
 
